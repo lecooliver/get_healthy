@@ -52,15 +52,15 @@ const showCharts = ref(true)
 const selectedMetrics = ref(['weight', 'bodyFatPercentage'])
 
 const metricOptions = [
-  { key: 'weight', label: 'Weight', color: '#2563eb' },
-  { key: 'bodyFatPercentage', label: 'Body Fat %', color: '#dc2626' },
-  { key: 'waist', label: 'Waist', color: '#16a34a' },
-  { key: 'hips', label: 'Hips', color: '#9333ea' },
-  { key: 'chest', label: 'Chest', color: '#ea580c' },
-  { key: 'bicepL', label: 'Left Bicep', color: '#0891b2' },
-  { key: 'bicepR', label: 'Right Bicep', color: '#4f46e5' },
-  { key: 'thighL', label: 'Left Thigh', color: '#be185d' },
-  { key: 'thighR', label: 'Right Thigh', color: '#0d9488' }
+  { key: 'weight', label: 'Peso', color: '#2563eb' },
+  { key: 'bodyFatPercentage', label: 'Gordura corporal %', color: '#dc2626' },
+  { key: 'waist', label: 'Cintura', color: '#16a34a' },
+  { key: 'hips', label: 'Quadril', color: '#9333ea' },
+  { key: 'chest', label: 'Peitoral', color: '#ea580c' },
+  { key: 'bicepL', label: 'Bíceps esquerdo', color: '#0891b2' },
+  { key: 'bicepR', label: 'Bíceps direito', color: '#4f46e5' },
+  { key: 'thighL', label: 'Coxa esquerda', color: '#be185d' },
+  { key: 'thighR', label: 'Coxa direita', color: '#0d9488' }
 ]
 
 onMounted(async () => {
@@ -76,7 +76,7 @@ const loadMeasurements = async () => {
       measurements.value = await response.json()
     }
   } catch (error) {
-    console.error('Failed to load measurements:', error)
+    console.error('Não foi possível carregar as medidas:', error)
   } finally {
     loading.value = false
   }
@@ -100,7 +100,7 @@ const saveMeasurement = async () => {
       resetForm()
     }
   } catch (error) {
-    console.error('Failed to save measurement:', error)
+    console.error('Não foi possível salvar a medida:', error)
   } finally {
     saving.value = false
   }
@@ -132,7 +132,7 @@ const sortedMeasurements = computed(() => {
 
 const chartData = computed(() => {
   const labels = sortedMeasurements.value.map(m => 
-    new Date(m.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+    new Date(m.date).toLocaleDateString('pt-BR', { month: 'short', day: 'numeric' })
   )
   
   const datasets = selectedMetrics.value.map(metricKey => {
@@ -195,20 +195,20 @@ const toggleMetric = (metricKey) => {
   <div class="space-y-6">
     <div class="flex items-center justify-between">
       <h1 class="text-2xl font-bold">
-        Body Measurements
+        Medidas corporais
       </h1>
       <div class="flex gap-2">
         <button
           class="btn btn-secondary"
           @click="showCharts = !showCharts"
         >
-          {{ showCharts ? 'Hide Charts' : 'Show Charts' }}
+          {{ showCharts ? 'Ocultar gráficos' : 'Exibir gráficos' }}
         </button>
         <button
           class="btn btn-primary"
           @click="showAddForm = !showAddForm"
         >
-          {{ showAddForm ? 'Cancel' : '+ Add Measurement' }}
+          {{ showAddForm ? 'Cancelar' : '+ Adicionar medida' }}
         </button>
       </div>
     </div>
@@ -218,14 +218,14 @@ const toggleMetric = (metricKey) => {
       class="card"
     >
       <h2 class="text-lg font-semibold mb-4">
-        New Measurement
+        Nova medida
       </h2>
       <form
         class="space-y-4"
         @submit.prevent="saveMeasurement"
       >
         <div>
-          <label class="block text-sm font-medium mb-1">Date</label>
+          <label class="block text-sm font-medium mb-1">Data</label>
           <input
             v-model="newMeasurement.date"
             type="date"
@@ -236,7 +236,7 @@ const toggleMetric = (metricKey) => {
 
         <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
           <div>
-            <label class="block text-sm font-medium mb-1">Weight</label>
+            <label class="block text-sm font-medium mb-1">Peso</label>
             <input
               v-model="newMeasurement.weight"
               type="number"
@@ -246,7 +246,7 @@ const toggleMetric = (metricKey) => {
             >
           </div>
           <div>
-            <label class="block text-sm font-medium mb-1">Body Fat %</label>
+            <label class="block text-sm font-medium mb-1">Gordura corporal %</label>
             <input
               v-model="newMeasurement.bodyFatPercentage"
               type="number"
@@ -256,7 +256,7 @@ const toggleMetric = (metricKey) => {
             >
           </div>
           <div>
-            <label class="block text-sm font-medium mb-1">Neck</label>
+            <label class="block text-sm font-medium mb-1">Pescoço</label>
             <input
               v-model="newMeasurement.neck"
               type="number"
@@ -266,7 +266,7 @@ const toggleMetric = (metricKey) => {
             >
           </div>
           <div>
-            <label class="block text-sm font-medium mb-1">Shoulders</label>
+            <label class="block text-sm font-medium mb-1">Ombros</label>
             <input
               v-model="newMeasurement.shoulderSpan"
               type="number"
@@ -276,7 +276,7 @@ const toggleMetric = (metricKey) => {
             >
           </div>
           <div>
-            <label class="block text-sm font-medium mb-1">Chest</label>
+            <label class="block text-sm font-medium mb-1">Peitoral</label>
             <input
               v-model="newMeasurement.chest"
               type="number"
@@ -286,7 +286,7 @@ const toggleMetric = (metricKey) => {
             >
           </div>
           <div>
-            <label class="block text-sm font-medium mb-1">Waist</label>
+            <label class="block text-sm font-medium mb-1">Cintura</label>
             <input
               v-model="newMeasurement.waist"
               type="number"
@@ -296,7 +296,7 @@ const toggleMetric = (metricKey) => {
             >
           </div>
           <div>
-            <label class="block text-sm font-medium mb-1">Hips</label>
+            <label class="block text-sm font-medium mb-1">Quadril</label>
             <input
               v-model="newMeasurement.hips"
               type="number"
@@ -306,7 +306,7 @@ const toggleMetric = (metricKey) => {
             >
           </div>
           <div>
-            <label class="block text-sm font-medium mb-1">Left Bicep</label>
+            <label class="block text-sm font-medium mb-1">Bíceps esquerdo</label>
             <input
               v-model="newMeasurement.bicepL"
               type="number"
@@ -316,7 +316,7 @@ const toggleMetric = (metricKey) => {
             >
           </div>
           <div>
-            <label class="block text-sm font-medium mb-1">Right Bicep</label>
+            <label class="block text-sm font-medium mb-1">Bíceps direito</label>
             <input
               v-model="newMeasurement.bicepR"
               type="number"
@@ -326,7 +326,7 @@ const toggleMetric = (metricKey) => {
             >
           </div>
           <div>
-            <label class="block text-sm font-medium mb-1">Left Thigh</label>
+            <label class="block text-sm font-medium mb-1">Coxa esquerda</label>
             <input
               v-model="newMeasurement.thighL"
               type="number"
@@ -336,7 +336,7 @@ const toggleMetric = (metricKey) => {
             >
           </div>
           <div>
-            <label class="block text-sm font-medium mb-1">Right Thigh</label>
+            <label class="block text-sm font-medium mb-1">Coxa direita</label>
             <input
               v-model="newMeasurement.thighR"
               type="number"
@@ -346,7 +346,7 @@ const toggleMetric = (metricKey) => {
             >
           </div>
           <div>
-            <label class="block text-sm font-medium mb-1">Left Calf</label>
+            <label class="block text-sm font-medium mb-1">Panturrilha esquerda</label>
             <input
               v-model="newMeasurement.calfL"
               type="number"
@@ -356,7 +356,7 @@ const toggleMetric = (metricKey) => {
             >
           </div>
           <div>
-            <label class="block text-sm font-medium mb-1">Right Calf</label>
+            <label class="block text-sm font-medium mb-1">Panturrilha direita</label>
             <input
               v-model="newMeasurement.calfR"
               type="number"
@@ -366,7 +366,7 @@ const toggleMetric = (metricKey) => {
             >
           </div>
           <div>
-            <label class="block text-sm font-medium mb-1">Back Span</label>
+            <label class="block text-sm font-medium mb-1">Largura das costas</label>
             <input
               v-model="newMeasurement.backSpan"
               type="number"
@@ -382,7 +382,7 @@ const toggleMetric = (metricKey) => {
           class="btn btn-primary"
           :disabled="saving"
         >
-          {{ saving ? 'Saving...' : 'Save Measurement' }}
+          {{ saving ? 'Salvando...' : 'Salvar medida' }}
         </button>
       </form>
     </div>
@@ -393,7 +393,7 @@ const toggleMetric = (metricKey) => {
     >
       <div class="flex items-center justify-between mb-4">
         <h2 class="text-lg font-semibold">
-          Progress Over Time
+          Progresso ao longo do tempo
         </h2>
         <div class="flex flex-wrap gap-2">
           <button
@@ -433,13 +433,13 @@ const toggleMetric = (metricKey) => {
         📏
       </div>
       <p class="text-gray-600 dark:text-gray-400 mb-4">
-        No measurements recorded yet
+        Nenhuma medida registrada
       </p>
       <button
         class="btn btn-primary"
         @click="showAddForm = true"
       >
-        Add Your First Measurement
+        Adicionar sua primeira medida
       </button>
     </div>
 
@@ -451,34 +451,34 @@ const toggleMetric = (metricKey) => {
         <thead>
           <tr class="border-b border-gray-200 dark:border-gray-700">
             <th class="text-left py-3 px-2">
-              Date
+              Data
             </th>
             <th class="text-right py-3 px-2">
-              Weight
+              Peso
             </th>
             <th class="text-right py-3 px-2">
-              Body Fat %
+              Gordura corporal %
             </th>
             <th class="text-right py-3 px-2">
-              Waist
+              Cintura
             </th>
             <th class="text-right py-3 px-2">
-              Hips
+              Quadril
             </th>
             <th class="text-right py-3 px-2">
-              Chest
+              Peitoral
             </th>
             <th class="text-right py-3 px-2">
-              L Bicep
+              Bíceps E
             </th>
             <th class="text-right py-3 px-2">
-              R Bicep
+              Bíceps D
             </th>
             <th class="text-right py-3 px-2">
-              L Thigh
+              Coxa E
             </th>
             <th class="text-right py-3 px-2">
-              R Thigh
+              Coxa D
             </th>
           </tr>
         </thead>
@@ -489,7 +489,7 @@ const toggleMetric = (metricKey) => {
             class="border-b border-gray-100 dark:border-gray-700/50 hover:bg-gray-50 dark:hover:bg-gray-700/50"
           >
             <td class="py-3 px-2">
-              {{ new Date(m.date).toLocaleDateString() }}
+              {{ new Date(m.date).toLocaleDateString('pt-BR') }}
             </td>
             <td class="py-3 px-2 text-right">
               {{ m.weight || '-' }}

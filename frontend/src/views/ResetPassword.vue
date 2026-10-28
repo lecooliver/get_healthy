@@ -15,7 +15,7 @@ const success = ref(false)
 onMounted(() => {
   token.value = route.query.token || ''
   if (!token.value) {
-    error.value = 'Invalid reset link. Please request a new password reset.'
+    error.value = 'Link de redefinição inválido. Solicite uma nova redefinição de senha.'
   }
 })
 
@@ -23,17 +23,17 @@ const handleSubmit = async () => {
   error.value = ''
   
   if (!token.value) {
-    error.value = 'Invalid reset token'
+    error.value = 'Token de redefinição inválido.'
     return
   }
   
   if (password.value.length < 6) {
-    error.value = 'Password must be at least 6 characters'
+    error.value = 'A senha deve ter pelo menos 6 caracteres.'
     return
   }
   
   if (password.value !== confirmPassword.value) {
-    error.value = 'Passwords do not match'
+    error.value = 'As senhas não coincidem.'
     return
   }
   
@@ -51,7 +51,7 @@ const handleSubmit = async () => {
 
     if (!response.ok) {
       const data = await response.json()
-      throw new Error(data.error || 'Failed to reset password')
+      throw new Error(data.error || 'Não foi possível redefinir a senha.')
     }
 
     success.value = true
@@ -70,7 +70,7 @@ const handleSubmit = async () => {
         Get Healthy
       </h1>
       <p class="text-gray-600 dark:text-gray-400">
-        Create new password
+        Crie uma nova senha
       </p>
     </div>
     
@@ -83,16 +83,16 @@ const handleSubmit = async () => {
           ✅
         </div>
         <h2 class="text-xl font-semibold">
-          Password Reset Complete
+          Senha redefinida
         </h2>
         <p class="text-gray-600 dark:text-gray-400">
-          Your password has been successfully reset. You can now sign in with your new password.
+          Sua senha foi redefinida. Agora você pode entrar com a nova senha.
         </p>
         <button
           class="btn btn-primary"
           @click="router.push('/login')"
         >
-          Sign In
+          Entrar
         </button>
       </div>
 
@@ -109,7 +109,7 @@ const handleSubmit = async () => {
         </div>
         
         <div>
-          <label class="block text-sm font-medium mb-1">New Password</label>
+          <label class="block text-sm font-medium mb-1">Nova senha</label>
           <input
             v-model="password"
             type="password"
@@ -121,7 +121,7 @@ const handleSubmit = async () => {
         </div>
         
         <div>
-          <label class="block text-sm font-medium mb-1">Confirm Password</label>
+          <label class="block text-sm font-medium mb-1">Confirme a senha</label>
           <input
             v-model="confirmPassword"
             type="password"
@@ -137,7 +137,7 @@ const handleSubmit = async () => {
           class="btn btn-primary w-full"
           :disabled="loading || !token"
         >
-          {{ loading ? 'Resetting...' : 'Reset Password' }}
+          {{ loading ? 'Redefinindo...' : 'Redefinir senha' }}
         </button>
       </form>
     </div>

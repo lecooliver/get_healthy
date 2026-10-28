@@ -3,6 +3,7 @@ import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import ConfirmModal from '@/components/ConfirmModal.vue'
+import { translatePrebuiltText } from '@/utils/prebuiltTemplateTranslations'
 
 const router = useRouter()
 const authStore = useAuthStore()
@@ -22,11 +23,15 @@ const newRoutine = ref({
 })
 
 const routineTypes = [
-  { value: 'weightlifting', label: 'Weight Lifting', icon: '🏋️' },
-  { value: 'aerobic', label: 'Aerobic', icon: '🏃' },
-  { value: 'flexibility', label: 'Flexibility', icon: '🧘' },
-  { value: 'combination', label: 'Combination', icon: '💪' }
+  { value: 'weightlifting', label: 'Musculação', icon: '🏋️' },
+  { value: 'aerobic', label: 'Aeróbico', icon: '🏃' },
+  { value: 'flexibility', label: 'Flexibilidade', icon: '🧘' },
+  { value: 'combination', label: 'Combinado', icon: '💪' }
 ]
+
+const getRoutineTypeLabel = (type) => {
+  return routineTypes.find(routineType => routineType.value === type)?.label || type
+}
 
 onMounted(async () => {
   await Promise.all([loadRoutines()])
@@ -41,7 +46,7 @@ const loadRoutines = async () => {
       routines.value = await response.json()
     }
   } catch (error) {
-    console.error('Failed to load routines:', error)
+    console.error('Não foi possível carregar as rotinas:', error)
   } finally {
     loading.value = false
   }
@@ -56,7 +61,7 @@ const loadTemplates = async () => {
       templates.value = await response.json()
     }
   } catch (error) {
-    console.error('Failed to load templates:', error)
+    console.error('Não foi possível carregar os modelos:', error)
   }
 }
 
@@ -79,7 +84,7 @@ const createRoutine = async () => {
       newRoutine.value = { name: '', type: 'weightlifting' }
     }
   } catch (error) {
-    console.error('Failed to create routine:', error)
+    console.error('Não foi possível criar a rotina:', error)
   }
 }
 
@@ -103,7 +108,7 @@ const startFromTemplate = async (template) => {
       showTemplateModal.value = false
     }
   } catch (error) {
-    console.error('Failed to start from template:', error)
+    console.error('Não foi possível iniciar pelo modelo:', error)
   } finally {
     starting.value = null
   }
@@ -128,7 +133,7 @@ const deleteRoutine = async () => {
       await loadRoutines()
     }
   } catch (error) {
-    console.error('Failed to delete routine:', error)
+    console.error('Não foi possível excluir a rotina:', error)
   } finally {
     showDeleteConfirm.value = false
     deletingRoutineId.value = null
@@ -159,20 +164,20 @@ const getExerciseCount = (template) => {
   <div class="space-y-6">
     <div class="flex items-center justify-between">
       <h1 class="text-2xl font-bold">
-        My Routines
+        Minhas rotinas
       </h1>
       <div class="flex gap-2">
         <button
           class="btn btn-secondary"
           @click="openTemplateModal"
         >
-          📋 Browse Templates
+          📋 Explorar modelos
         </button>
         <button
           class="btn btn-primary"
           @click="showCreateModal = true"
         >
-          + Create Routine
+          + Criar rotina
         </button>
       </div>
     </div>
@@ -192,23 +197,23 @@ const getExerciseCount = (template) => {
         🏃
       </div>
       <p class="text-gray-600 dark:text-gray-400 mb-4">
-        No routines yet
+        Você ainda não tem rotinas
       </p>
       <p class="text-sm text-gray-500 mb-6">
-        Create a routine or start from a pre-built template
+        Crie uma rotina ou comece com um modelo pronto
       </p>
       <div class="flex justify-center gap-3">
         <button
           class="btn btn-primary"
           @click="showCreateModal = true"
         >
-          Create Routine
+          Criar rotina
         </button>
         <button
           class="btn btn-secondary"
           @click="showTemplateModal = true"
         >
-          Browse Templates
+          Explorar modelos
         </button>
       </div>
     </div>
@@ -227,9 +232,9 @@ const getExerciseCount = (template) => {
             <span class="text-3xl">{{ getRoutineIcon(routine.type) }}</span>
             <div>
               <h3 class="font-semibold">
-                {{ routine.name }}
+                {{ translatePrebuiltText(routine.name) }}
               </h3>
-              <span class="text-xs text-gray-500 capitalize">{{ routine.type }}</span>
+              <span class="text-xs text-gray-500">{{ getRoutineTypeLabel(routine.type) }}</span>
             </div>
           </div>
           <button
@@ -241,14 +246,14 @@ const getExerciseCount = (template) => {
         </div>
         
         <div class="text-sm text-gray-600 dark:text-gray-400 mb-4">
-          {{ routine.workoutCount || 0 }} workouts
+          {{ routine.workoutCount || 0 }} treinos
         </div>
         
         <button
           class="btn btn-primary w-full"
           @click="router.push(`/routines/${routine.id}/workouts`)"
         >
-          Start Workout
+          Iniciar treino
         </button>
       </div>
     </div>
@@ -260,25 +265,25 @@ const getExerciseCount = (template) => {
     >
       <div class="bg-white dark:bg-gray-800 rounded-xl p-6 w-full max-w-md">
         <h2 class="text-xl font-semibold mb-4">
-          Create New Routine
+          Criar nova rotina
         </h2>
         <form
           class="space-y-4"
           @submit.prevent="createRoutine"
         >
           <div>
-            <label class="block text-sm font-medium mb-1">Routine Name</label>
+            <label class="block text-sm font-medium mb-1">Nome da rotina</label>
             <input
               v-model="newRoutine.name"
               type="text"
               class="input"
-              placeholder="My Workout Routine"
+              placeholder="Minha rotina de treino"
               required
             >
           </div>
           
           <div>
-            <label class="block text-sm font-medium mb-2">Routine Type</label>
+            <label class="block text-sm font-medium mb-2">Tipo de rotina</label>
             <div class="grid grid-cols-2 gap-2">
               <button
                 v-for="type in routineTypes"
@@ -302,13 +307,13 @@ const getExerciseCount = (template) => {
               class="btn btn-secondary"
               @click="showCreateModal = false"
             >
-              Cancel
+              Cancelar
             </button>
             <button
               type="submit"
               class="btn btn-primary"
             >
-              Create
+              Criar
             </button>
           </div>
         </form>
@@ -322,15 +327,15 @@ const getExerciseCount = (template) => {
     >
       <div class="bg-white dark:bg-gray-800 rounded-xl p-6 w-full max-w-2xl max-h-[80vh] overflow-y-auto">
         <h2 class="text-xl font-semibold mb-4">
-          Start from Template
+          Começar com um modelo
         </h2>
         <div
           v-if="templates.length === 0"
           class="text-center py-8 text-gray-500"
         >
-          <p>Loading templates...</p>
+          <p>Carregando modelos...</p>
           <p class="text-sm mt-2">
-            If no templates appear, make sure an admin user exists.
+            Se nenhum modelo aparecer, verifique se existe um usuário administrador.
           </p>
         </div>
         <div
@@ -347,22 +352,22 @@ const getExerciseCount = (template) => {
             <div class="flex items-center gap-2 mb-2">
               <span class="text-xl">{{ getTemplateIcon(template.type) }}</span>
               <h3 class="font-semibold">
-                {{ template.name }}
+                {{ translatePrebuiltText(template.name) }}
               </h3>
             </div>
             <p class="text-sm text-gray-600 dark:text-gray-400 mb-2">
-              {{ template.description }}
+              {{ translatePrebuiltText(template.description) }}
             </p>
             <div class="flex items-center justify-between text-xs text-gray-500">
-              <span class="capitalize">{{ template.type }}</span>
-              <span v-if="template.workouts">{{ template.workouts.length }} workout(s) • {{ getExerciseCount(template) }} exercises</span>
+              <span>{{ getRoutineTypeLabel(template.type) }}</span>
+              <span v-if="template.workouts">{{ template.workouts.length }} treinos • {{ getExerciseCount(template) }} exercícios</span>
             </div>
             <button
               v-if="starting === template.id"
               class="btn btn-primary w-full mt-2 text-sm"
               disabled
             >
-              Creating...
+              Criando...
             </button>
           </div>
         </div>
@@ -371,7 +376,7 @@ const getExerciseCount = (template) => {
             class="btn btn-secondary"
             @click="showTemplateModal = false"
           >
-            Close
+            Fechar
           </button>
         </div>
       </div>
@@ -379,9 +384,9 @@ const getExerciseCount = (template) => {
 
     <ConfirmModal
       :show="showDeleteConfirm"
-      title="Delete Routine"
-      message="Are you sure you want to delete this routine? This action cannot be undone."
-      confirm-text="Delete"
+      title="Excluir rotina"
+      message="Tem certeza de que deseja excluir esta rotina? Esta ação não pode ser desfeita."
+      confirm-text="Excluir"
       confirm-class="btn-danger"
       @update:show="showDeleteConfirm = $event"
       @confirm="deleteRoutine"

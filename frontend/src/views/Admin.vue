@@ -8,10 +8,10 @@ const authStore = useAuthStore()
 
 const activeTab = ref('overview')
 const tabs = [
-  { id: 'overview', label: 'Overview', icon: '📊' },
-  { id: 'users', label: 'Users', icon: '👥' },
+  { id: 'overview', label: 'Visão geral', icon: '📊' },
+  { id: 'users', label: 'Usuários', icon: '👥' },
   { id: 'oidc', label: 'OIDC', icon: '🔐' },
-  { id: 'smtp', label: 'Email', icon: '📧' }
+  { id: 'smtp', label: 'E-mail', icon: '📧' }
 ]
 
 const users = ref([])
@@ -56,7 +56,7 @@ const loadUsers = async () => {
       users.value = await response.json()
     }
   } catch (error) {
-    console.error('Failed to load users:', error)
+    console.error('Não foi possível carregar os usuários:', error)
   }
 }
 
@@ -69,7 +69,7 @@ const loadStats = async () => {
       stats.value = await response.json()
     }
   } catch (error) {
-    console.error('Failed to load stats:', error)
+    console.error('Não foi possível carregar as estatísticas:', error)
   }
 }
 
@@ -83,11 +83,11 @@ const loadSettings = async () => {
       if (data.oidc) oidcSettings.value = { ...oidcSettings.value, ...data.oidc }
       if (data.smtp) smtpSettings.value = { ...smtpSettings.value, ...data.smtp }
     } else {
-      message.value = { type: 'error', text: 'Failed to load settings' }
+      message.value = { type: 'error', text: 'Não foi possível carregar as configurações.' }
     }
   } catch (error) {
-    console.error('Failed to load settings:', error)
-    message.value = { type: 'error', text: 'Failed to load settings' }
+    console.error('Não foi possível carregar as configurações:', error)
+    message.value = { type: 'error', text: 'Não foi possível carregar as configurações.' }
   }
 }
 
@@ -104,10 +104,10 @@ const saveOidcSettings = async () => {
       body: JSON.stringify(oidcSettings.value)
     })
     if (response.ok) {
-      message.value = { type: 'success', text: 'OIDC settings saved. Restart the server to apply changes.' }
+      message.value = { type: 'success', text: 'Configurações OIDC salvas. Reinicie o servidor para aplicar as alterações.' }
     }
   } catch (error) {
-    message.value = { type: 'error', text: 'Failed to save OIDC settings' }
+    message.value = { type: 'error', text: 'Não foi possível salvar as configurações OIDC.' }
   } finally {
     saving.value = false
   }
@@ -127,13 +127,13 @@ const saveSmtpSettings = async () => {
     })
     if (response.ok) {
       await loadSettings()
-      message.value = { type: 'success', text: 'Email settings saved.' }
+      message.value = { type: 'success', text: 'Configurações de e-mail salvas.' }
     } else {
       const err = await response.json().catch(() => ({}))
-      message.value = { type: 'error', text: `Failed to save: ${err.error || response.statusText}` }
+      message.value = { type: 'error', text: `Não foi possível salvar: ${err.error || response.statusText}` }
     }
   } catch (error) {
-    message.value = { type: 'error', text: 'Failed to save email settings' }
+    message.value = { type: 'error', text: 'Não foi possível salvar as configurações de e-mail.' }
   } finally {
     saving.value = false
   }
@@ -149,12 +149,12 @@ const testSmtp = async () => {
     })
     const data = await response.json()
     if (response.ok) {
-      message.value = { type: 'success', text: 'Test email sent successfully!' }
+      message.value = { type: 'success', text: 'E-mail de teste enviado com sucesso!' }
     } else {
-      message.value = { type: 'error', text: data.error || 'Failed to send test email' }
+      message.value = { type: 'error', text: data.error || 'Não foi possível enviar o e-mail de teste.' }
     }
   } catch (error) {
-    message.value = { type: 'error', text: 'Failed to send test email' }
+    message.value = { type: 'error', text: 'Não foi possível enviar o e-mail de teste.' }
   } finally {
     saving.value = false
   }
@@ -176,7 +176,7 @@ const updateUserRole = async (userId, newRole) => {
       editingUser.value = null
     }
   } catch (error) {
-    console.error('Failed to update user:', error)
+    console.error('Não foi possível atualizar o usuário:', error)
   }
 }
 
@@ -200,7 +200,7 @@ const deleteUser = async () => {
       await loadStats()
     }
   } catch (error) {
-    console.error('Failed to delete user:', error)
+    console.error('Não foi possível excluir o usuário:', error)
   } finally {
     showDeleteConfirm.value = false
     deletingUserId.value = null
@@ -214,7 +214,7 @@ const getOidcProviderInfo = (provider) => {
     keycloak: { name: 'Keycloak', url: 'https://www.keycloak.org' },
     authentik: { name: 'Authentik', url: 'https://goauthentik.io' },
     authelia: { name: 'Authelia', url: 'https://www.authelia.com' },
-    generic: { name: 'Generic OIDC', url: 'https://any-oidc-provider.com' }
+    generic: { name: 'OIDC genérico', url: 'https://any-oidc-provider.com' }
   }
   return info[provider] || { name: provider, url: '' }
 }
@@ -223,7 +223,7 @@ const getOidcProviderInfo = (provider) => {
 <template>
   <div class="space-y-6">
     <h1 class="text-2xl font-bold">
-      Admin Settings
+      Configurações de administração
     </h1>
 
     <div
@@ -266,7 +266,7 @@ const getOidcProviderInfo = (provider) => {
         class="space-y-6"
       >
         <h2 class="text-lg font-semibold">
-          System Overview
+          Visão geral do sistema
         </h2>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <div class="card">
@@ -277,7 +277,7 @@ const getOidcProviderInfo = (provider) => {
               {{ stats?.totalUsers || 0 }}
             </div>
             <div class="text-sm text-gray-500">
-              Total Users
+              Total de usuários
             </div>
           </div>
           <div class="card">
@@ -288,7 +288,7 @@ const getOidcProviderInfo = (provider) => {
               {{ stats?.adminUsers || 0 }}
             </div>
             <div class="text-sm text-gray-500">
-              Admins
+              Administradores
             </div>
           </div>
           <div class="card">
@@ -299,7 +299,7 @@ const getOidcProviderInfo = (provider) => {
               {{ stats?.totalWorkouts || 0 }}
             </div>
             <div class="text-sm text-gray-500">
-              Completed Workouts
+              Treinos concluídos
             </div>
           </div>
           <div class="card">
@@ -310,7 +310,7 @@ const getOidcProviderInfo = (provider) => {
               {{ stats?.totalMeasurements || 0 }}
             </div>
             <div class="text-sm text-gray-500">
-              Measurements
+              Medidas
             </div>
           </div>
         </div>
@@ -321,7 +321,7 @@ const getOidcProviderInfo = (provider) => {
         class="space-y-6"
       >
         <h2 class="text-lg font-semibold">
-          User Management
+          Gerenciamento de usuários
         </h2>
         <div class="card">
           <div class="overflow-x-auto">
@@ -335,31 +335,31 @@ const getOidcProviderInfo = (provider) => {
                     scope="col"
                     class="text-left py-3 px-2"
                   >
-                    User
+                    Usuário
                   </th>
                   <th
                     scope="col"
                     class="text-left py-3 px-2"
                   >
-                    Email
+                    E-mail
                   </th>
                   <th
                     scope="col"
                     class="text-left py-3 px-2"
                   >
-                    Role
+                    Função
                   </th>
                   <th
                     scope="col"
                     class="text-left py-3 px-2"
                   >
-                    Joined
+                    Cadastro
                   </th>
                   <th
                     scope="col"
                     class="text-right py-3 px-2"
                   >
-                    Actions
+                    Ações
                   </th>
                 </tr>
               </thead>
@@ -380,11 +380,11 @@ const getOidcProviderInfo = (provider) => {
                       class="px-2 py-1 text-xs rounded capitalize"
                       :class="user.role === 'admin' ? 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400' : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'"
                     >
-                      {{ user.role }}
+                      {{ user.role === 'admin' ? 'Administrador' : 'Usuário' }}
                     </span>
                   </td>
                   <td class="py-3 px-2">
-                    {{ new Date(user.createdAt).toLocaleDateString() }}
+                    {{ new Date(user.createdAt).toLocaleDateString('pt-BR') }}
                   </td>
                   <td class="py-3 px-2 text-right">
                     <div class="flex gap-2 justify-end">
@@ -392,14 +392,14 @@ const getOidcProviderInfo = (provider) => {
                         v-if="editingUser === user.id"
                         v-model="user.role"
                         class="input text-sm py-1 w-24"
-                        :aria-label="`Change role for ${user.displayName}`"
+                        :aria-label="`Alterar função de ${user.displayName}`"
                         @change="updateUserRole(user.id, user.role)"
                       >
                         <option value="user">
-                          User
+                          Usuário
                         </option>
                         <option value="admin">
-                          Admin
+                          Administrador
                         </option>
                       </select>
                       <button
@@ -407,21 +407,21 @@ const getOidcProviderInfo = (provider) => {
                         class="text-blue-600 hover:underline text-sm focus:ring-2 focus:ring-blue-500 rounded"
                         @click="editingUser = user.id"
                       >
-                        Edit
+                        Editar
                       </button>
                       <button
                         v-if="editingUser === user.id"
                         class="text-gray-500 hover:underline text-sm"
                         @click="editingUser = null"
                       >
-                        Cancel
+                        Cancelar
                       </button>
                       <button
                         v-if="user.id !== authStore.user?.id"
                         class="text-red-600 hover:underline text-sm"
                         @click="confirmDeleteUser(user.id)"
                       >
-                        Delete
+                        Excluir
                       </button>
                     </div>
                   </td>
@@ -437,10 +437,10 @@ const getOidcProviderInfo = (provider) => {
         class="space-y-6"
       >
         <h2 class="text-lg font-semibold">
-          OIDC / OAuth2 Configuration
+          Configuração de OIDC / OAuth2
         </h2>
         <p class="text-sm text-gray-600 dark:text-gray-400">
-          Configure OAuth2 and OIDC providers for single sign-on. Changes require a server restart.
+          Configure provedores OAuth2 e OIDC para autenticação única. As alterações exigem a reinicialização do servidor.
         </p>
 
         <div class="space-y-6">
@@ -455,7 +455,7 @@ const getOidcProviderInfo = (provider) => {
                   v-model="oidcSettings[provider].enabled"
                   type="checkbox"
                   class="w-4 h-4"
-                  :aria-label="`Enable ${getOidcProviderInfo(provider).name}`"
+                  :aria-label="`Habilitar ${getOidcProviderInfo(provider).name}`"
                 >
                 {{ getOidcProviderInfo(provider).name }}
               </h3>
@@ -466,7 +466,7 @@ const getOidcProviderInfo = (provider) => {
                 rel="noopener noreferrer"
                 class="text-sm text-blue-600 hover:underline"
               >
-                Setup Guide →
+                Guia de configuração →
               </a>
             </div>
 
@@ -479,14 +479,14 @@ const getOidcProviderInfo = (provider) => {
                   :for="`${provider}-issuer`"
                   class="block text-sm font-medium mb-1"
                 >
-                  Issuer URL <HelpIcon text="The base URL of your OIDC provider (e.g., https://your-keycloak.com/realms/your-realm)" />
+                  URL do emissor <HelpIcon text="URL base do provedor OIDC (ex.: https://seu-keycloak.com/realms/seu-dominio)" />
                 </label>
                 <input
                   :id="`${provider}-issuer`"
                   v-model="oidcSettings[provider].issuer"
                   type="url"
                   class="input"
-                  :placeholder="`https://your-${provider}.com`"
+                  :placeholder="`https://seu-${provider}.com`"
                 >
               </div>
 
@@ -494,13 +494,13 @@ const getOidcProviderInfo = (provider) => {
                 <label
                   :for="`${provider}-client-id`"
                   class="block text-sm font-medium mb-1"
-                >Client ID</label>
+                >ID do cliente</label>
                 <input
                   :id="`${provider}-client-id`"
                   v-model="oidcSettings[provider].clientId"
                   type="text"
                   class="input"
-                  placeholder="Client ID from provider"
+                  placeholder="ID do cliente fornecido pelo provedor"
                 >
               </div>
 
@@ -508,13 +508,13 @@ const getOidcProviderInfo = (provider) => {
                 <label
                   :for="`${provider}-client-secret`"
                   class="block text-sm font-medium mb-1"
-                >Client Secret</label>
+                >Segredo do cliente</label>
                 <input
                   :id="`${provider}-client-secret`"
                   v-model="oidcSettings[provider].clientSecret"
                   type="password"
                   class="input"
-                  placeholder="Client secret from provider"
+                  placeholder="Segredo do cliente fornecido pelo provedor"
                   autocomplete="off"
                 >
               </div>
@@ -527,7 +527,7 @@ const getOidcProviderInfo = (provider) => {
           :disabled="saving"
           @click="saveOidcSettings"
         >
-          {{ saving ? 'Saving...' : 'Save OIDC Settings' }}
+          {{ saving ? 'Salvando...' : 'Salvar configurações OIDC' }}
         </button>
       </div>
 
@@ -536,10 +536,10 @@ const getOidcProviderInfo = (provider) => {
         class="space-y-6"
       >
         <h2 class="text-lg font-semibold">
-          Email / SMTP Configuration
+          Configuração de e-mail / SMTP
         </h2>
         <p class="text-sm text-gray-600 dark:text-gray-400">
-          Configure SMTP settings for sending emails (password reset, notifications, etc.)
+          Configure o SMTP para enviar e-mails (redefinição de senha, notificações etc.).
         </p>
 
         <div class="card space-y-4">
@@ -549,7 +549,7 @@ const getOidcProviderInfo = (provider) => {
                 for="smtp-host"
                 class="block text-sm font-medium mb-1"
               >
-                SMTP Host <HelpIcon text="Your mail server hostname (e.g., smtp.gmail.com, smtp.sendgrid.net)" />
+                Servidor SMTP <HelpIcon text="Nome do servidor de e-mail (ex.: smtp.gmail.com, smtp.sendgrid.net)" />
               </label>
               <input
                 id="smtp-host"
@@ -565,7 +565,7 @@ const getOidcProviderInfo = (provider) => {
                 for="smtp-port"
                 class="block text-sm font-medium mb-1"
               >
-                Port <HelpIcon text="Common ports: 587 (TLS), 465 (SSL), 25 (unencrypted)" />
+                Porta <HelpIcon text="Portas comuns: 587 (TLS), 465 (SSL), 25 (sem criptografia)" />
               </label>
               <input
                 id="smtp-port"
@@ -581,13 +581,13 @@ const getOidcProviderInfo = (provider) => {
             <label
               for="smtp-user"
               class="block text-sm font-medium mb-1"
-            >Username</label>
+            >Usuário</label>
             <input
               id="smtp-user"
               v-model="smtpSettings.user"
               type="text"
               class="input"
-              placeholder="your@email.com"
+              placeholder="voce@exemplo.com"
               autocomplete="username"
             >
           </div>
@@ -596,13 +596,13 @@ const getOidcProviderInfo = (provider) => {
             <label
               for="smtp-pass"
               class="block text-sm font-medium mb-1"
-            >Password</label>
+            >Senha</label>
             <input
               id="smtp-pass"
               v-model="smtpSettings.pass"
               type="password"
               class="input"
-              placeholder="Password or API key"
+              placeholder="Senha ou chave de API"
               autocomplete="current-password"
             >
           </div>
@@ -618,7 +618,7 @@ const getOidcProviderInfo = (provider) => {
               for="smtp-secure"
               class="text-sm"
             >
-              Use SSL/TLS <HelpIcon text="Enable for port 465. For port 587, keep this unchecked (STARTTLS)" />
+              Usar SSL/TLS <HelpIcon text="Ative para a porta 465. Na porta 587, deixe desmarcado (STARTTLS)." />
             </label>
           </div>
 
@@ -627,7 +627,7 @@ const getOidcProviderInfo = (provider) => {
               <label
                 for="smtp-from"
                 class="block text-sm font-medium mb-1"
-              >From Email</label>
+              >E-mail do remetente</label>
               <input
                 id="smtp-from"
                 v-model="smtpSettings.from"
@@ -641,7 +641,7 @@ const getOidcProviderInfo = (provider) => {
               <label
                 for="smtp-from-name"
                 class="block text-sm font-medium mb-1"
-              >From Name</label>
+              >Nome do remetente</label>
               <input
                 id="smtp-from-name"
                 v-model="smtpSettings.fromName"
@@ -658,28 +658,28 @@ const getOidcProviderInfo = (provider) => {
               :disabled="saving"
               @click="saveSmtpSettings"
             >
-              {{ saving ? 'Saving...' : 'Save Email Settings' }}
+              {{ saving ? 'Salvando...' : 'Salvar configurações de e-mail' }}
             </button>
             <button
               class="btn btn-secondary"
               :disabled="saving || !smtpSettings.host"
               @click="testSmtp"
             >
-              Send Test Email
+              Enviar e-mail de teste
             </button>
           </div>
         </div>
 
         <div class="card bg-gray-50 dark:bg-gray-800/50">
           <h3 class="font-medium mb-2">
-            Common SMTP Providers
+            Provedores SMTP comuns
           </h3>
           <ul class="text-sm text-gray-600 dark:text-gray-400 space-y-1">
-            <li><strong>Gmail:</strong> smtp.gmail.com | Port 587 | Requires App Password</li>
-            <li><strong>Outlook:</strong> smtp-mail.outlook.com | Port 587 | TLS</li>
-            <li><strong>SendGrid:</strong> smtp.sendgrid.net | Port 587 | API Key</li>
-            <li><strong>Mailgun:</strong> smtp.mailgun.org | Port 587 | TLS</li>
-            <li><strong>AWS SES:</strong> email-smtp.us-east-1.amazonaws.com | Port 587 | SMTP credentials</li>
+            <li><strong>Gmail:</strong> smtp.gmail.com | Porta 587 | Requer senha de app</li>
+            <li><strong>Outlook:</strong> smtp-mail.outlook.com | Porta 587 | TLS</li>
+            <li><strong>SendGrid:</strong> smtp.sendgrid.net | Porta 587 | Chave de API</li>
+            <li><strong>Mailgun:</strong> smtp.mailgun.org | Porta 587 | TLS</li>
+            <li><strong>AWS SES:</strong> email-smtp.us-east-1.amazonaws.com | Porta 587 | Credenciais SMTP</li>
           </ul>
         </div>
       </div>
@@ -687,9 +687,9 @@ const getOidcProviderInfo = (provider) => {
 
     <ConfirmModal
       :show="showDeleteConfirm"
-      title="Delete User"
-      message="Are you sure you want to delete this user? This action cannot be undone."
-      confirm-text="Delete"
+      title="Excluir usuário"
+      message="Tem certeza de que deseja excluir este usuário? Esta ação não pode ser desfeita."
+      confirm-text="Excluir"
       confirm-class="btn-danger"
       @update:show="showDeleteConfirm = $event"
       @confirm="deleteUser"

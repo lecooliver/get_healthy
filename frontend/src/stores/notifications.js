@@ -22,7 +22,7 @@ export const useNotificationStore = defineStore('notifications', () => {
       permission.value = result
       return result === 'granted'
     } catch (error) {
-      console.error('Failed to request notification permission:', error)
+      console.error('Não foi possível solicitar permissão para notificações:', error)
       return false
     }
   }
@@ -51,8 +51,8 @@ export const useNotificationStore = defineStore('notifications', () => {
 
     if (reminderTime <= new Date()) return
 
-    const notification = new Notification('Workout Reminder', {
-      body: `Time for ${workoutName}!`,
+    const notification = new Notification('Lembrete de treino', {
+      body: `Hora de ${workoutName}!`,
       icon: '/favicon.ico',
       tag: `workout-${workoutName}`
     })

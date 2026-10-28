@@ -41,7 +41,7 @@ onMounted(async () => {
       avatarUrl.value = data.avatarUrl || ''
     }
   } catch (err) {
-    console.error('Failed to load profile:', err)
+    console.error('Não foi possível carregar o perfil:', err)
   }
 })
 
@@ -62,12 +62,12 @@ const handleAvatarChange = async (event) => {
       body: formData
     })
     
-    if (!response.ok) throw new Error('Failed to upload avatar')
+    if (!response.ok) throw new Error('Não foi possível enviar o avatar.')
     
     const data = await response.json()
     avatarUrl.value = data.avatarUrl
     authStore.updateAvatar(data.avatarUrl)
-    success.value = 'Avatar updated successfully'
+    success.value = 'Avatar atualizado com sucesso.'
   } catch (err) {
     error.value = err.message
   } finally {
@@ -89,10 +89,10 @@ const saveProfile = async () => {
       body: JSON.stringify(profile.value)
     })
     
-    if (!response.ok) throw new Error('Failed to update profile')
+    if (!response.ok) throw new Error('Não foi possível atualizar o perfil.')
     
     authStore.updateUser(profile.value)
-    success.value = 'Profile updated successfully'
+    success.value = 'Perfil atualizado com sucesso.'
   } catch (err) {
     error.value = err.message
   } finally {
@@ -110,7 +110,7 @@ const deleteAllData = async () => {
       }
     })
     
-    if (!response.ok) throw new Error('Failed to delete data')
+    if (!response.ok) throw new Error('Não foi possível excluir os dados.')
     
     authStore.logout()
     window.location.href = '/login'
@@ -130,8 +130,8 @@ const toggleNotifications = async () => {
 
 const testNotification = () => {
   notificationStore.showInstantNotification(
-    'Test Notification',
-    'Notifications are working correctly!'
+    'Notificação de teste',
+    'As notificações estão funcionando corretamente!'
   )
 }
 
@@ -153,7 +153,7 @@ const loadLimits = async () => {
       limits.value = await response.json()
     }
   } catch (err) {
-    console.error('Failed to load limits:', err)
+    console.error('Não foi possível carregar os limites:', err)
   }
 }
 
@@ -177,7 +177,7 @@ onMounted(async () => {
     }
     await loadLimits()
   } catch (err) {
-    console.error('Failed to load profile:', err)
+    console.error('Não foi possível carregar o perfil:', err)
   }
 })
 
@@ -205,7 +205,7 @@ const addLimit = async () => {
       await loadLimits()
     }
   } catch (err) {
-    console.error('Failed to add limit:', err)
+    console.error('Não foi possível adicionar o limite:', err)
   }
 }
 
@@ -219,7 +219,7 @@ const deleteLimit = async (id) => {
       await loadLimits()
     }
   } catch (err) {
-    console.error('Failed to delete limit:', err)
+    console.error('Não foi possível excluir o limite:', err)
   }
 }
 
@@ -238,7 +238,7 @@ const groupedLimits = computed(() => {
 <template>
   <div class="max-w-2xl mx-auto space-y-6">
     <h1 class="text-2xl font-bold">
-      Profile Settings
+      Configurações do perfil
     </h1>
     
     <div
@@ -257,7 +257,7 @@ const groupedLimits = computed(() => {
 
     <div class="card">
       <h2 class="text-lg font-semibold mb-4">
-        Profile Picture
+        Foto do perfil
       </h2>
       <div class="flex items-center gap-6">
         <div class="relative flex-shrink-0">
@@ -265,7 +265,7 @@ const groupedLimits = computed(() => {
             <img
               v-if="avatarUrl"
               :src="avatarUrl"
-              alt="Profile picture"
+              alt="Foto do perfil"
               class="w-full h-full object-cover"
               @error="($event.target.style.display = 'none')"
             >
@@ -281,23 +281,23 @@ const groupedLimits = computed(() => {
               class="text-lg"
               aria-hidden="true"
             >📷</span>
-            <span class="sr-only">Upload photo</span>
+            <span class="sr-only">Enviar foto</span>
             <input
               type="file"
               accept="image/*"
               class="hidden"
               :disabled="saving"
-              aria-label="Upload profile picture"
+              aria-label="Enviar foto do perfil"
               @change="handleAvatarChange"
             >
           </label>
         </div>
         <div class="flex-1">
           <p class="text-sm text-gray-600 dark:text-gray-400 mb-2">
-            Upload a photo to personalize your profile
+            Envie uma foto para personalizar seu perfil
           </p>
           <p class="text-xs text-gray-500">
-            Recommended: Square image, at least 200x200 pixels
+            Recomendado: imagem quadrada com pelo menos 200 × 200 pixels
           </p>
         </div>
       </div>
@@ -305,14 +305,14 @@ const groupedLimits = computed(() => {
 
     <div class="card">
       <h2 class="text-lg font-semibold mb-4">
-        Personal Information
+        Informações pessoais
       </h2>
       <form
         class="space-y-4"
         @submit.prevent="saveProfile"
       >
         <div>
-          <label class="block text-sm font-medium mb-1">Display Name</label>
+          <label class="block text-sm font-medium mb-1">Nome de exibição</label>
           <input
             v-model="profile.displayName"
             type="text"
@@ -321,18 +321,18 @@ const groupedLimits = computed(() => {
         </div>
         
         <div>
-          <label class="block text-sm font-medium mb-1">Height</label>
+          <label class="block text-sm font-medium mb-1">Altura</label>
           <input
             v-model="profile.height"
             type="number"
             step="0.1"
             class="input"
-            placeholder="inches"
+            placeholder="polegadas"
           >
         </div>
         
         <div>
-          <label class="block text-sm font-medium mb-1">Age</label>
+          <label class="block text-sm font-medium mb-1">Idade</label>
           <input
             v-model="profile.age"
             type="number"
@@ -341,7 +341,7 @@ const groupedLimits = computed(() => {
         </div>
         
         <div>
-          <label class="block text-sm font-medium mb-1">Current Weight</label>
+          <label class="block text-sm font-medium mb-1">Peso atual</label>
           <input
             v-model="profile.weight"
             type="number"
@@ -352,16 +352,16 @@ const groupedLimits = computed(() => {
         </div>
         
         <div>
-          <label class="block text-sm font-medium mb-1">Preferred Weight Unit</label>
+          <label class="block text-sm font-medium mb-1">Unidade de peso preferida</label>
           <select
             v-model="profile.weightUnit"
             class="input"
           >
             <option value="lb">
-              Pounds (lb)
+              Libras (lb)
             </option>
             <option value="kg">
-              Kilograms (kg)
+              Quilogramas (kg)
             </option>
           </select>
         </div>
@@ -371,22 +371,22 @@ const groupedLimits = computed(() => {
           class="btn btn-primary"
           :disabled="saving"
         >
-          {{ saving ? 'Saving...' : 'Save Changes' }}
+          {{ saving ? 'Salvando...' : 'Salvar alterações' }}
         </button>
       </form>
     </div>
 
     <div class="card">
       <h2 class="text-lg font-semibold mb-4">
-        Appearance
+        Aparência
       </h2>
       <div class="flex items-center justify-between">
         <div>
           <div class="font-medium">
-            Theme
+            Tema
           </div>
           <div class="text-sm text-gray-600 dark:text-gray-400">
-            Currently: {{ uiStore.theme === 'dark' ? 'Dark' : 'Light' }}
+            Atual: {{ uiStore.theme === 'dark' ? 'Escuro' : uiStore.theme === 'system' ? 'Sistema' : 'Claro' }}
           </div>
         </div>
         <div class="flex gap-2">
@@ -395,21 +395,21 @@ const groupedLimits = computed(() => {
             :class="uiStore.theme === 'light' ? 'btn-primary' : 'btn-secondary'"
             @click="uiStore.setTheme('light')"
           >
-            ☀️ Light
+            ☀️ Claro
           </button>
           <button
             class="btn"
             :class="uiStore.theme === 'dark' ? 'btn-primary' : 'btn-secondary'"
             @click="uiStore.setTheme('dark')"
           >
-            🌙 Dark
+            🌙 Escuro
           </button>
           <button
             class="btn"
             :class="uiStore.theme === 'system' ? 'btn-primary' : 'btn-secondary'"
             @click="uiStore.setTheme('system')"
           >
-            💻 System
+            💻 Sistema
           </button>
         </div>
       </div>
@@ -420,16 +420,16 @@ const groupedLimits = computed(() => {
       class="card"
     >
       <h2 class="text-lg font-semibold mb-4">
-        Notifications
+        Notificações
       </h2>
       <div class="space-y-4">
         <div class="flex items-center justify-between">
           <div>
             <div class="font-medium">
-              Push Notifications
+              Notificações push
             </div>
             <div class="text-sm text-gray-600 dark:text-gray-400">
-              Get reminders for scheduled workouts
+              Receba lembretes dos treinos agendados
             </div>
           </div>
           <button
@@ -448,7 +448,7 @@ const groupedLimits = computed(() => {
           v-if="notificationStore.permission === 'denied'"
           class="text-sm text-red-600 dark:text-red-400"
         >
-          Notifications are blocked. Please enable them in your browser settings.
+          As notificações estão bloqueadas. Ative-as nas configurações do navegador.
         </div>
         
         <div v-else-if="notificationStore.enabled">
@@ -456,7 +456,7 @@ const groupedLimits = computed(() => {
             class="btn btn-secondary text-sm"
             @click="testNotification"
           >
-            Send Test Notification
+            Enviar notificação de teste
           </button>
         </div>
         
@@ -464,7 +464,7 @@ const groupedLimits = computed(() => {
           v-else
           class="text-sm text-gray-500"
         >
-          Click the toggle above to enable notifications.
+          Ative a opção acima para habilitar as notificações.
         </div>
       </div>
     </div>
@@ -474,35 +474,35 @@ const groupedLimits = computed(() => {
       class="card"
     >
       <h2 class="text-lg font-semibold mb-4">
-        Notifications
+        Notificações
       </h2>
       <div class="text-sm text-gray-600 dark:text-gray-400">
-        Push notifications are not available. This feature requires HTTPS and browser notification support.
+        Notificações push indisponíveis. Este recurso exige HTTPS e suporte a notificações no navegador.
       </div>
     </div>
 
     <div class="card">
       <div class="flex items-center justify-between mb-4">
         <h2 class="text-lg font-semibold">
-          Exercise Limits
+          Limites de exercícios
         </h2>
         <button
           class="btn btn-primary text-sm"
           @click="showAddLimit = true"
         >
-          + Add Limit
+          + Adicionar limite
         </button>
       </div>
       
       <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
-        Set upper and lower limits for exercises to get warnings when exceeded.
+        Defina limites máximos e mínimos para receber avisos quando forem ultrapassados.
       </p>
       
       <div
         v-if="limits.length === 0"
         class="text-center py-6 text-gray-500"
       >
-        No limits set. Add a limit to track exercise boundaries.
+        Nenhum limite definido. Adicione um limite para acompanhar seus exercícios.
       </div>
       
       <div
@@ -523,7 +523,7 @@ const groupedLimits = computed(() => {
               class="flex items-center gap-2 px-3 py-1 rounded-full"
               :class="limit.limitType === 'upper' ? 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400' : 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400'"
             >
-              <span class="text-xs">{{ limit.limitType === 'upper' ? 'Max' : 'Min' }}:</span>
+              <span class="text-xs">{{ limit.limitType === 'upper' ? 'Máx.' : 'Mín.' }}:</span>
               <span class="font-medium">
                 {{ limit.value }} {{ limit.unit || '' }}
               </span>
@@ -543,44 +543,44 @@ const groupedLimits = computed(() => {
         class="mt-4 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg"
       >
         <h3 class="font-medium mb-3">
-          Add New Limit
+          Adicionar novo limite
         </h3>
         <div class="grid grid-cols-2 gap-3">
           <div>
-            <label class="block text-sm mb-1">Exercise Name</label>
+            <label class="block text-sm mb-1">Nome do exercício</label>
             <input
               v-model="newLimit.exerciseName"
               type="text"
               class="input w-full"
-              placeholder="e.g., Squat"
+              placeholder="Ex.: agachamento"
             >
           </div>
           <div>
-            <label class="block text-sm mb-1">Limit Type</label>
+            <label class="block text-sm mb-1">Tipo de limite</label>
             <select
               v-model="newLimit.limitType"
               class="input w-full"
             >
               <option value="upper">
-                Upper Limit (Max)
+                Limite superior (máximo)
               </option>
               <option value="lower">
-                Lower Limit (Min)
+                Limite inferior (mínimo)
               </option>
             </select>
           </div>
           <div>
-            <label class="block text-sm mb-1">Value</label>
+            <label class="block text-sm mb-1">Valor</label>
             <input
               v-model="newLimit.value"
               type="number"
               step="0.5"
               class="input w-full"
-              placeholder="e.g., 225"
+              placeholder="Ex.: 100"
             >
           </div>
           <div>
-            <label class="block text-sm mb-1">Unit</label>
+            <label class="block text-sm mb-1">Unidade</label>
             <select
               v-model="newLimit.unit"
               class="input w-full"
@@ -592,7 +592,7 @@ const groupedLimits = computed(() => {
                 kg
               </option>
               <option value="reps">
-                reps
+                repetições
               </option>
             </select>
           </div>
@@ -603,13 +603,13 @@ const groupedLimits = computed(() => {
             :disabled="!newLimit.exerciseName.trim()"
             @click="addLimit"
           >
-            Add Limit
+            Adicionar limite
           </button>
           <button
             class="btn btn-secondary"
             @click="showAddLimit = false"
           >
-            Cancel
+            Cancelar
           </button>
         </div>
       </div>
@@ -617,17 +617,17 @@ const groupedLimits = computed(() => {
 
     <div class="card border-2 border-red-200 dark:border-red-800">
       <h2 class="text-lg font-semibold mb-2 text-red-600 dark:text-red-400">
-        Danger Zone
+        Zona de perigo
       </h2>
       <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
-        Permanently delete all your data. This action cannot be undone.
+        Exclua permanentemente todos os seus dados. Esta ação não pode ser desfeita.
       </p>
       <div v-if="!showDeleteConfirm">
         <button
           class="btn btn-danger"
           @click="showDeleteConfirm = true"
         >
-          Delete All My Data
+          Excluir todos os meus dados
         </button>
       </div>
       <div
@@ -635,13 +635,13 @@ const groupedLimits = computed(() => {
         class="space-y-3"
       >
         <p class="font-medium text-red-600 dark:text-red-400">
-          Are you absolutely sure? This will delete:
+          Tem certeza? Os seguintes dados serão excluídos:
         </p>
         <ul class="list-disc list-inside text-sm text-gray-600 dark:text-gray-400">
-          <li>Your profile and settings</li>
-          <li>All measurements</li>
-          <li>All routines and workouts</li>
-          <li>All templates</li>
+          <li>Seu perfil e suas configurações</li>
+          <li>Todas as medidas</li>
+          <li>Todas as rotinas e os treinos</li>
+          <li>Todos os modelos</li>
         </ul>
         <div class="flex gap-2">
           <button
@@ -649,13 +649,13 @@ const groupedLimits = computed(() => {
             :disabled="deleting"
             @click="deleteAllData"
           >
-            {{ deleting ? 'Deleting...' : 'Yes, Delete Everything' }}
+            {{ deleting ? 'Excluindo...' : 'Sim, excluir tudo' }}
           </button>
           <button
             class="btn btn-secondary"
             @click="showDeleteConfirm = false"
           >
-            Cancel
+            Cancelar
           </button>
         </div>
       </div>

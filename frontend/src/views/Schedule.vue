@@ -23,7 +23,7 @@ const newSchedule = ref({
   cadenceValue: 1
 })
 
-const weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+const weekDays = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb']
 
 const calendarDays = computed(() => {
   const year = currentMonth.value.getFullYear()
@@ -50,7 +50,7 @@ const calendarDays = computed(() => {
 })
 
 const monthLabel = computed(() => {
-  return currentMonth.value.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
+  return currentMonth.value.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' })
 })
 
 const prevMonth = () => {
@@ -95,7 +95,7 @@ const loadSchedule = async () => {
       scheduledWorkouts.value = await response.json()
     }
   } catch (error) {
-    console.error('Failed to load schedule:', error)
+    console.error('Não foi possível carregar a agenda:', error)
   } finally {
     loading.value = false
   }
@@ -110,7 +110,7 @@ const loadRoutines = async () => {
       routines.value = await response.json()
     }
   } catch (error) {
-    console.error('Failed to load routines:', error)
+    console.error('Não foi possível carregar as rotinas:', error)
   }
 }
 
@@ -143,7 +143,7 @@ const addSchedule = async () => {
       }
     }
   } catch (error) {
-    console.error('Failed to add schedule:', error)
+    console.error('Não foi possível adicionar o agendamento:', error)
   }
 }
 
@@ -166,7 +166,7 @@ const deleteSchedule = async () => {
       await loadSchedule()
     }
   } catch (error) {
-    console.error('Failed to delete schedule:', error)
+    console.error('Não foi possível excluir o agendamento:', error)
   } finally {
     showDeleteConfirm.value = false
     deletingScheduleId.value = null
@@ -174,9 +174,9 @@ const deleteSchedule = async () => {
 }
 
 const getCadenceLabel = (schedule) => {
-  if (schedule.cadenceType === 'once') return 'One-time'
-  if (schedule.cadenceType === 'daily') return 'Daily'
-  if (schedule.cadenceType === 'every_x_days') return `Every ${schedule.cadenceValue} days`
+  if (schedule.cadenceType === 'once') return 'Uma vez'
+  if (schedule.cadenceType === 'daily') return 'Diariamente'
+  if (schedule.cadenceType === 'every_x_days') return `A cada ${schedule.cadenceValue} dias`
   return ''
 }
 </script>
@@ -185,7 +185,7 @@ const getCadenceLabel = (schedule) => {
   <div class="space-y-6">
     <div class="flex items-center justify-between">
       <h1 class="text-2xl font-bold">
-        Schedule
+        Agenda
       </h1>
       <div class="flex gap-2">
         <div class="flex bg-gray-100 dark:bg-gray-800 rounded-lg p-1">
@@ -193,20 +193,20 @@ const getCadenceLabel = (schedule) => {
             :class="['px-3 py-1 rounded text-sm', viewMode === 'list' ? 'bg-white dark:bg-gray-700 shadow' : '']"
             @click="viewMode = 'list'"
           >
-            List
+            Lista
           </button>
           <button
             :class="['px-3 py-1 rounded text-sm', viewMode === 'calendar' ? 'bg-white dark:bg-gray-700 shadow' : '']"
             @click="viewMode = 'calendar'"
           >
-            Calendar
+            Calendário
           </button>
         </div>
         <button
           class="btn btn-primary"
           @click="showAddForm = !showAddForm"
         >
-          {{ showAddForm ? 'Cancel' : '+ Schedule' }}
+          {{ showAddForm ? 'Cancelar' : '+ Agendar' }}
         </button>
       </div>
     </div>
@@ -216,21 +216,21 @@ const getCadenceLabel = (schedule) => {
       class="card"
     >
       <h2 class="text-lg font-semibold mb-4">
-        Schedule a Workout
+        Agendar um treino
       </h2>
       <form
         class="space-y-4"
         @submit.prevent="addSchedule"
       >
         <div>
-          <label class="block text-sm font-medium mb-1">Routine</label>
+          <label class="block text-sm font-medium mb-1">Rotina</label>
           <select
             v-model="newSchedule.routineId"
             class="input"
             required
           >
             <option value="">
-              Select a routine
+              Selecione uma rotina
             </option>
             <option
               v-for="r in routines"
@@ -243,7 +243,7 @@ const getCadenceLabel = (schedule) => {
         </div>
 
         <div>
-          <label class="block text-sm font-medium mb-1">Scheduled Date</label>
+          <label class="block text-sm font-medium mb-1">Data agendada</label>
           <input
             v-model="newSchedule.scheduledDate"
             type="date"
@@ -253,20 +253,20 @@ const getCadenceLabel = (schedule) => {
         </div>
 
         <div>
-          <label class="block text-sm font-medium mb-1">Cadence</label>
+          <label class="block text-sm font-medium mb-1">Frequência</label>
           <div class="flex gap-2">
             <select
               v-model="newSchedule.cadenceType"
               class="input"
             >
               <option value="once">
-                One-time
+                Uma vez
               </option>
               <option value="daily">
-                Daily
+                Diariamente
               </option>
               <option value="every_x_days">
-                Every X days
+                A cada X dias
               </option>
             </select>
             <input
@@ -275,7 +275,7 @@ const getCadenceLabel = (schedule) => {
               type="number"
               min="2"
               class="input w-24"
-              placeholder="Days"
+              placeholder="Dias"
             >
           </div>
         </div>
@@ -284,7 +284,7 @@ const getCadenceLabel = (schedule) => {
           type="submit"
           class="btn btn-primary"
         >
-          Schedule
+          Agendar
         </button>
       </form>
     </div>
@@ -351,7 +351,7 @@ const getCadenceLabel = (schedule) => {
                   :key="workout.id"
                   class="text-xs p-1 bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 rounded truncate"
                 >
-                  {{ workout.routine?.name || 'Workout' }}
+                  {{ workout.routine?.name || 'Treino' }}
                 </div>
               </div>
             </template>
@@ -367,13 +367,13 @@ const getCadenceLabel = (schedule) => {
           📅
         </div>
         <p class="text-gray-600 dark:text-gray-400 mb-4">
-          No scheduled workouts
+          Nenhum treino agendado
         </p>
         <button
           class="btn btn-primary"
           @click="showAddForm = true"
         >
-          Schedule Your First Workout
+          Agendar seu primeiro treino
         </button>
       </div>
 
@@ -391,7 +391,7 @@ const getCadenceLabel = (schedule) => {
               {{ schedule.routine?.name }}
             </div>
             <div class="text-sm text-gray-500">
-              {{ new Date(schedule.scheduledDate).toLocaleDateString() }}
+              {{ new Date(schedule.scheduledDate).toLocaleDateString('pt-BR') }}
               <span class="mx-2">•</span>
               {{ getCadenceLabel(schedule) }}
             </div>
@@ -408,20 +408,20 @@ const getCadenceLabel = (schedule) => {
 
     <div class="card">
       <h2 class="text-lg font-semibold mb-4">
-        Tips
+        Dicas
       </h2>
       <ul class="space-y-2 text-sm text-gray-600 dark:text-gray-400">
-        <li>• Schedule workouts in advance to build consistency</li>
-        <li>• Use the cadence feature for recurring routines (e.g., every 2 days)</li>
-        <li>• Start with 3-4 workouts per week and build from there</li>
+        <li>• Agende os treinos com antecedência para manter a constância</li>
+        <li>• Use a frequência para repetir rotinas (ex.: a cada 2 dias)</li>
+        <li>• Comece com 3 ou 4 treinos por semana e evolua gradualmente</li>
       </ul>
     </div>
 
     <ConfirmModal
       :show="showDeleteConfirm"
-      title="Remove Scheduled Workout"
-      message="Are you sure you want to remove this scheduled workout?"
-      confirm-text="Remove"
+      title="Remover treino agendado"
+      message="Tem certeza de que deseja remover este treino da agenda?"
+      confirm-text="Remover"
       confirm-class="btn-danger"
       @update:show="showDeleteConfirm = $event"
       @confirm="deleteSchedule"

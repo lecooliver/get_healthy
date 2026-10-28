@@ -56,7 +56,7 @@ const loadPhotos = async () => {
       photos.value = await response.json()
     }
   } catch (error) {
-    console.error('Failed to load photos:', error)
+    console.error('Não foi possível carregar as fotos:', error)
   } finally {
     loading.value = false
   }
@@ -71,7 +71,7 @@ const loadCategories = async () => {
       categories.value = await response.json()
     }
   } catch (error) {
-    console.error('Failed to load categories:', error)
+    console.error('Não foi possível carregar as categorias:', error)
   }
 }
 
@@ -110,7 +110,7 @@ const uploadPhoto = async (file) => {
       await loadCategories()
     }
   } catch (error) {
-    console.error('Failed to upload photo:', error)
+    console.error('Não foi possível enviar a foto:', error)
   } finally {
     uploading.value = false
   }
@@ -153,7 +153,7 @@ const updatePhoto = async () => {
       await loadCategories()
     }
   } catch (error) {
-    console.error('Failed to update photo:', error)
+    console.error('Não foi possível atualizar a foto:', error)
   }
 }
 
@@ -180,7 +180,7 @@ const deletePhoto = async () => {
       }
     }
   } catch (error) {
-    console.error('Failed to delete photo:', error)
+    console.error('Não foi possível excluir a foto:', error)
   } finally {
     showDeleteConfirm.value = false
     deletingPhotoId.value = null
@@ -190,7 +190,7 @@ const deletePhoto = async () => {
 const openTimelapse = (category) => {
   const categoryPhotos = photos.value.filter(p => p.category === category)
   if (categoryPhotos.length < 2) {
-    alert('You need at least 2 photos in a category to create a timelapse.')
+    alert('Você precisa de pelo menos 2 fotos na categoria para criar um timelapse.')
     return
   }
   timelapseIndex.value = 0
@@ -233,7 +233,7 @@ const getPhotoUrl = (filename) => {
 const photosByCategory = computed(() => {
   const grouped = {}
   photos.value.forEach(photo => {
-    const cat = photo.category || 'Uncategorized'
+    const cat = photo.category || 'Sem categoria'
     if (!grouped[cat]) grouped[cat] = []
     grouped[cat].push(photo)
   })
@@ -258,7 +258,7 @@ const currentTimelapsePhoto = computed(() => {
   <div class="space-y-6">
     <div class="flex items-center justify-between flex-wrap gap-4">
       <h1 class="text-2xl font-bold">
-        Photo Journal
+        Diário de fotos
       </h1>
       <div class="flex gap-2">
         <select
@@ -267,7 +267,7 @@ const currentTimelapsePhoto = computed(() => {
           @change="loadPhotos"
         >
           <option value="all">
-            All Photos
+            Todas as fotos
           </option>
           <option
             v-for="cat in categories"
@@ -281,7 +281,7 @@ const currentTimelapsePhoto = computed(() => {
           class="btn btn-primary"
           @click="showUploadModal = true"
         >
-          + Upload Photo
+          + Enviar foto
         </button>
       </div>
     </div>
@@ -301,16 +301,16 @@ const currentTimelapsePhoto = computed(() => {
         📷
       </div>
       <p class="text-gray-600 dark:text-gray-400 mb-4">
-        No photos yet
+        Nenhuma foto por enquanto
       </p>
       <p class="text-sm text-gray-500 mb-4">
-        Upload your first photo to start tracking your progress
+        Envie sua primeira foto para acompanhar seu progresso
       </p>
       <button
         class="btn btn-primary"
         @click="showUploadModal = true"
       >
-        Upload Your First Photo
+        Enviar sua primeira foto
       </button>
     </div>
 
@@ -327,7 +327,7 @@ const currentTimelapsePhoto = computed(() => {
           <h2 class="text-lg font-semibold flex items-center gap-2">
             <span>📁</span>
             {{ category }}
-            <span class="text-sm font-normal text-gray-500">({{ categoryPhotos.length }} photos)</span>
+            <span class="text-sm font-normal text-gray-500">({{ categoryPhotos.length }} fotos)</span>
           </h2>
           <button 
             v-if="categoryPhotos.length >= 2"
@@ -347,7 +347,7 @@ const currentTimelapsePhoto = computed(() => {
           >
             <img
               :src="getPhotoUrl(photo.filename)"
-              :alt="photo.notes || 'Progress photo'"
+              :alt="photo.notes || 'Foto de progresso'"
               class="w-full h-full object-cover"
             >
             <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
@@ -366,7 +366,7 @@ const currentTimelapsePhoto = computed(() => {
             </div>
             <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-2">
               <p class="text-white text-xs">
-                {{ photo.takenAt ? new Date(photo.takenAt).toLocaleDateString() : 'No date' }}
+                {{ photo.takenAt ? new Date(photo.takenAt).toLocaleDateString('pt-BR') : 'Sem data' }}
               </p>
             </div>
           </div>
@@ -378,10 +378,10 @@ const currentTimelapsePhoto = computed(() => {
         class="card bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20"
       >
         <h2 class="text-lg font-semibold mb-2">
-          🎬 Create a Timelapse
+          🎬 Criar timelapse
         </h2>
         <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
-          Select a category to watch your progress as a timelapse animation
+          Escolha uma categoria para ver sua evolução em uma animação timelapse
         </p>
         <select
           v-model="selectedCategory"
@@ -401,7 +401,7 @@ const currentTimelapsePhoto = computed(() => {
           class="btn btn-primary mt-4" 
           @click="openTimelapse(selectedCategory)"
         >
-          ▶ Play Timelapse
+          ▶ Reproduzir timelapse
         </button>
       </div>
     </div>
@@ -420,7 +420,7 @@ const currentTimelapsePhoto = computed(() => {
         </button>
         <img
           :src="getPhotoUrl(selectedPhoto.filename)"
-          :alt="selectedPhoto.notes || 'Progress photo'"
+          :alt="selectedPhoto.notes || 'Foto de progresso'"
           class="max-w-full max-h-[85vh] rounded-lg"
         >
         <div class="mt-4 text-white text-center">
@@ -437,7 +437,7 @@ const currentTimelapsePhoto = computed(() => {
             {{ selectedPhoto.notes }}
           </p>
           <p class="text-sm text-gray-400 mt-1">
-            {{ selectedPhoto.takenAt ? new Date(selectedPhoto.takenAt).toLocaleDateString() : 'No date' }}
+            {{ selectedPhoto.takenAt ? new Date(selectedPhoto.takenAt).toLocaleDateString('pt-BR') : 'Sem data' }}
           </p>
         </div>
       </div>
@@ -450,12 +450,12 @@ const currentTimelapsePhoto = computed(() => {
     >
       <div class="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-md shadow-xl">
         <h3 class="text-lg font-semibold mb-4">
-          Upload Photo
+          Enviar foto
         </h3>
         
         <div class="space-y-4">
           <div>
-            <label class="block text-sm font-medium mb-1">Photo</label>
+            <label class="block text-sm font-medium mb-1">Foto</label>
             <input
               type="file"
               accept="image/*"
@@ -466,19 +466,19 @@ const currentTimelapsePhoto = computed(() => {
               v-if="selectedFile"
               class="text-sm text-green-600 mt-1"
             >
-              Selected: {{ selectedFile.name }}
+              Selecionado: {{ selectedFile.name }}
             </p>
           </div>
           
           <div>
-            <label class="block text-sm font-medium mb-1">Category</label>
+            <label class="block text-sm font-medium mb-1">Categoria</label>
             <div class="flex gap-2">
               <select
                 v-model="newPhoto.category"
                 class="input flex-1"
               >
                 <option value="">
-                  Select existing
+                  Selecionar existente
                 </option>
                 <option
                   v-for="cat in categories"
@@ -493,12 +493,12 @@ const currentTimelapsePhoto = computed(() => {
               v-model="newPhoto.customCategory"
               type="text"
               class="input w-full mt-2"
-              placeholder="Or enter new category"
+              placeholder="Ou informe uma nova categoria"
             >
           </div>
           
           <div>
-            <label class="block text-sm font-medium mb-1">Date Taken</label>
+            <label class="block text-sm font-medium mb-1">Data da foto</label>
             <input
               v-model="newPhoto.takenAt"
               type="date"
@@ -507,12 +507,12 @@ const currentTimelapsePhoto = computed(() => {
           </div>
           
           <div>
-            <label class="block text-sm font-medium mb-1">Notes</label>
+            <label class="block text-sm font-medium mb-1">Observações</label>
             <textarea
               v-model="newPhoto.notes"
               class="input w-full"
               rows="2"
-              placeholder="Optional notes..."
+              placeholder="Observações opcionais..."
             />
           </div>
         </div>
@@ -523,13 +523,13 @@ const currentTimelapsePhoto = computed(() => {
             :disabled="!selectedFile || uploading"
             @click="submitUpload"
           >
-            {{ uploading ? 'Uploading...' : 'Upload' }}
+            {{ uploading ? 'Enviando...' : 'Enviar' }}
           </button>
           <button
             class="btn btn-secondary flex-1"
             @click="showUploadModal = false"
           >
-            Cancel
+            Cancelar
           </button>
         </div>
       </div>
@@ -542,22 +542,22 @@ const currentTimelapsePhoto = computed(() => {
     >
       <div class="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-md shadow-xl">
         <h3 class="text-lg font-semibold mb-4">
-          Edit Photo
+          Editar foto
         </h3>
         
         <div class="space-y-4">
           <div>
-            <label class="block text-sm font-medium mb-1">Category</label>
+            <label class="block text-sm font-medium mb-1">Categoria</label>
             <input
               v-model="editingPhoto.category"
               type="text"
               class="input w-full"
-              placeholder="Category"
+              placeholder="Categoria"
             >
           </div>
           
           <div>
-            <label class="block text-sm font-medium mb-1">Date Taken</label>
+            <label class="block text-sm font-medium mb-1">Data da foto</label>
             <input
               v-model="editingPhoto.takenAt"
               type="date"
@@ -566,7 +566,7 @@ const currentTimelapsePhoto = computed(() => {
           </div>
           
           <div>
-            <label class="block text-sm font-medium mb-1">Notes</label>
+            <label class="block text-sm font-medium mb-1">Observações</label>
             <textarea
               v-model="editingPhoto.notes"
               class="input w-full"
@@ -580,13 +580,13 @@ const currentTimelapsePhoto = computed(() => {
             class="btn btn-primary flex-1"
             @click="updatePhoto"
           >
-            Save Changes
+            Salvar alterações
           </button>
           <button
             class="btn btn-secondary flex-1"
             @click="showEditModal = false"
           >
-            Cancel
+            Cancelar
           </button>
         </div>
       </div>
@@ -610,13 +610,13 @@ const currentTimelapsePhoto = computed(() => {
         </p>
         <p class="text-sm">
           {{ timelapseIndex + 1 }} / {{ timelapsePhotoList.length }}
-          • {{ currentTimelapsePhoto?.takenAt ? new Date(currentTimelapsePhoto.takenAt).toLocaleDateString() : '' }}
+          • {{ currentTimelapsePhoto?.takenAt ? new Date(currentTimelapsePhoto.takenAt).toLocaleDateString('pt-BR') : '' }}
         </p>
         <button
           class="btn mt-2"
           @click="toggleTimelapse(timelapsePhotoList)"
         >
-          {{ timelapsePlaying ? '⏸ Pause' : '▶ Play' }}
+          {{ timelapsePlaying ? '⏸ Pausar' : '▶ Reproduzir' }}
         </button>
       </div>
       
@@ -627,7 +627,7 @@ const currentTimelapsePhoto = computed(() => {
         <img
           :key="timelapseIndex"
           :src="getPhotoUrl(currentTimelapsePhoto.filename)"
-          :alt="'Timelapse frame ' + (timelapseIndex + 1)"
+          :alt="'Quadro do timelapse ' + (timelapseIndex + 1)"
           class="max-h-[80vh] max-w-[90vw] object-contain"
         >
       </div>
@@ -645,9 +645,9 @@ const currentTimelapsePhoto = computed(() => {
 
     <ConfirmModal
       :show="showDeleteConfirm"
-      title="Delete Photo"
-      message="Are you sure you want to delete this photo? This action cannot be undone."
-      confirm-text="Delete"
+      title="Excluir foto"
+      message="Tem certeza de que deseja excluir esta foto? Esta ação não pode ser desfeita."
+      confirm-text="Excluir"
       confirm-class="btn-danger"
       @update:show="showDeleteConfirm = $event"
       @confirm="deletePhoto"

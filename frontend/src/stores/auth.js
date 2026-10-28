@@ -16,7 +16,7 @@ export const useAuthStore = defineStore('auth', () => {
     const data = await response.json()
 
     if (!response.ok) {
-      throw new Error(data.error || 'Login failed')
+      throw new Error(data.error || 'Não foi possível entrar.')
     }
 
     token.value = data.token
@@ -34,7 +34,7 @@ export const useAuthStore = defineStore('auth', () => {
     const data = await response.json()
 
     if (!response.ok) {
-      throw new Error(data.error || 'Registration failed')
+      throw new Error(data.error || 'Não foi possível criar a conta.')
     }
 
     token.value = data.token

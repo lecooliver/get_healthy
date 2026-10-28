@@ -55,19 +55,19 @@ onMounted(() => {
 <template>
   <nav
     role="navigation"
-    aria-label="Main navigation"
+    aria-label="Navegação principal"
     class="fixed top-0 left-0 right-0 h-16 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 z-50"
   >
     <div class="h-full px-4 flex items-center justify-between">
       <RouterLink
         to="/"
         class="flex items-center gap-2"
-        aria-label="Get Healthy Home"
+        aria-label="Página inicial do Get Healthy"
       >
         <span
           class="text-2xl"
           role="img"
-          aria-label="flexed bicep"
+          aria-label="bíceps flexionado"
         >💪</span>
         <span class="text-xl font-bold text-blue-600 dark:text-blue-400">Get Healthy</span>
       </RouterLink>
@@ -76,31 +76,31 @@ onMounted(() => {
         <label
           class="sr-only"
           for="theme-select"
-        >Theme</label>
+        >Tema</label>
         <select
           id="theme-select"
           v-model="theme"
           class="bg-transparent border border-gray-300 dark:border-gray-600 rounded px-2 py-1 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
-          aria-label="Choose theme"
+          aria-label="Escolher tema"
           @change="onThemeChange"
         >
           <option
             value="light"
-            aria-label="Light theme"
+            aria-label="Tema claro"
           >
-            ☀️ Light
+            ☀️ Claro
           </option>
           <option
             value="dark"
-            aria-label="Dark theme"
+            aria-label="Tema escuro"
           >
-            🌙 Dark
+            🌙 Escuro
           </option>
           <option
             value="system"
-            aria-label="System theme"
+            aria-label="Tema do sistema"
           >
-            💻 System
+            💻 Sistema
           </option>
         </select>
 
@@ -108,13 +108,13 @@ onMounted(() => {
           <div
             class="flex items-center gap-2"
             role="img"
-            :aria-label="user.displayName ? `Logged in as ${user.displayName}` : 'User profile'"
+            :aria-label="user.displayName ? `Conectado como ${user.displayName}` : 'Perfil do usuário'"
           >
             <div class="w-8 h-8 rounded-full overflow-hidden bg-gray-200 dark:bg-gray-700 flex-shrink-0">
               <img
                 v-if="user.avatarUrl"
                 :src="user.avatarUrl"
-                :alt="user.displayName ? `${user.displayName}'s avatar` : 'User avatar'"
+                :alt="user.displayName ? `Avatar de ${user.displayName}` : 'Avatar do usuário'"
                 class="w-full h-full object-cover"
                 @error="($event.target.style.display = 'none')"
               >
@@ -123,7 +123,7 @@ onMounted(() => {
               v-if="!user.avatarUrl"
               class="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center"
               role="img"
-              aria-label="Default user avatar"
+              aria-label="Avatar padrão do usuário"
             >
               <span aria-hidden="true">👤</span>
             </div>
@@ -134,7 +134,7 @@ onMounted(() => {
             type="button"
             @click="logout"
           >
-            Logout
+            Sair
           </button>
         </template>
         <template v-else>
@@ -142,7 +142,7 @@ onMounted(() => {
             to="/login"
             class="btn btn-secondary text-sm"
           >
-            Login
+            Entrar
           </RouterLink>
         </template>
 
@@ -150,7 +150,7 @@ onMounted(() => {
           class="md:hidden p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-700 focus:ring-2 focus:ring-blue-500 focus:outline-none"
           :aria-expanded="mobileMenuOpen"
           aria-controls="mobile-menu"
-          aria-label="Toggle mobile menu"
+          aria-label="Alternar menu de navegação"
           type="button"
           @click="mobileMenuOpen = !mobileMenuOpen"
         >

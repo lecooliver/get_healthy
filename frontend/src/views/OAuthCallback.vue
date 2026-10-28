@@ -13,12 +13,12 @@ onMounted(async () => {
   const errorParam = params.get('error')
 
   if (errorParam) {
-    error.value = 'OAuth authentication failed. Please try again.'
+    error.value = 'A autenticação OAuth falhou. Tente novamente.'
     return
   }
 
   if (!token) {
-    error.value = 'No token received from OAuth provider.'
+    error.value = 'O provedor OAuth não retornou um token.'
     return
   }
 
@@ -29,7 +29,7 @@ onMounted(async () => {
   if (authStore.isAuthenticated) {
     router.push('/dashboard')
   } else {
-    error.value = 'Failed to authenticate. Please try again.'
+    error.value = 'Não foi possível autenticar. Tente novamente.'
   }
 })
 </script>
@@ -45,7 +45,7 @@ onMounted(async () => {
           ❌
         </div>
         <h2 class="text-xl font-semibold text-red-600">
-          Authentication Failed
+          Falha na autenticação
         </h2>
         <p class="text-gray-600 dark:text-gray-400">
           {{ error }}
@@ -54,7 +54,7 @@ onMounted(async () => {
           class="btn btn-primary"
           @click="router.push('/login')"
         >
-          Back to Login
+          Voltar para o acesso
         </button>
       </div>
       <div
@@ -63,7 +63,7 @@ onMounted(async () => {
       >
         <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4" />
         <p class="text-gray-600 dark:text-gray-400">
-          Completing sign in...
+          Concluindo o acesso...
         </p>
       </div>
     </div>

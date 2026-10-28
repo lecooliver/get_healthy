@@ -21,7 +21,7 @@ const handleSubmit = async () => {
   error.value = ''
   
   if (!form.value.email || !form.value.password) {
-    error.value = 'Please fill in all fields'
+    error.value = 'Preencha todos os campos.'
     return
   }
   
@@ -32,7 +32,7 @@ const handleSubmit = async () => {
     const redirect = route.query.redirect || '/dashboard'
     router.push(redirect)
   } catch (err) {
-    error.value = err.message || 'Login failed'
+    error.value = err.message || 'Não foi possível entrar.'
   } finally {
     loading.value = false
   }
@@ -70,7 +70,7 @@ const hasOAuthProviders = () => {
         Get Healthy
       </h1>
       <p class="text-gray-600 dark:text-gray-400">
-        Sign in to your account
+        Acesse sua conta
       </p>
     </div>
     
@@ -114,7 +114,7 @@ const hasOAuthProviders = () => {
             class="animate-spin"
             aria-hidden="true"
           >⟳</span>
-          <span>{{ oauthLoading === 'google' ? 'Connecting...' : 'Continue with Google' }}</span>
+          <span>{{ oauthLoading === 'google' ? 'Conectando...' : 'Continuar com Google' }}</span>
         </button>
         
         <button
@@ -138,7 +138,7 @@ const hasOAuthProviders = () => {
             class="animate-spin"
             aria-hidden="true"
           >⟳</span>
-          <span>{{ oauthLoading === 'github' ? 'Connecting...' : 'Continue with GitHub' }}</span>
+          <span>{{ oauthLoading === 'github' ? 'Conectando...' : 'Continuar com GitHub' }}</span>
         </button>
         
         <div
@@ -150,14 +150,14 @@ const hasOAuthProviders = () => {
             <div class="w-full border-t border-gray-300 dark:border-gray-600" />
           </div>
           <div class="relative flex justify-center text-sm">
-            <span class="px-2 bg-white dark:bg-gray-800 text-gray-500">Or continue with email</span>
+            <span class="px-2 bg-white dark:bg-gray-800 text-gray-500">Ou continue com e-mail</span>
           </div>
         </div>
       </div>
       
       <form
         class="space-y-4"
-        aria-label="Email login form"
+        aria-label="Formulário de acesso por e-mail"
         @submit.prevent="handleSubmit"
       >
         <div
@@ -173,13 +173,13 @@ const hasOAuthProviders = () => {
           <label
             for="email"
             class="block text-sm font-medium mb-1"
-          >Email</label>
+          >E-mail</label>
           <input
             id="email"
             v-model="form.email"
             type="email"
             class="input"
-            placeholder="you@example.com"
+            placeholder="voce@exemplo.com"
             autocomplete="email"
             required
             aria-required="true"
@@ -190,13 +190,13 @@ const hasOAuthProviders = () => {
           <label
             for="password"
             class="block text-sm font-medium mb-1"
-          >Password</label>
+          >Senha</label>
           <input
             id="password"
             v-model="form.password"
             type="password"
             class="input"
-            placeholder="Enter your password"
+            placeholder="Digite sua senha"
             autocomplete="current-password"
             required
             aria-required="true"
@@ -209,17 +209,17 @@ const hasOAuthProviders = () => {
           :disabled="loading"
           :aria-busy="loading"
         >
-          {{ loading ? 'Signing in...' : 'Sign In' }}
+          {{ loading ? 'Entrando...' : 'Entrar' }}
         </button>
       </form>
       
       <p class="text-center text-sm text-gray-600 dark:text-gray-400 mt-4">
-        Don't have an account?
+        Não tem uma conta?
         <RouterLink
           to="/register"
           class="text-blue-600 dark:text-blue-400 hover:underline focus:ring-2 focus:ring-blue-500 focus:outline-none rounded"
         >
-          Create one
+          Criar conta
         </RouterLink>
       </p>
       
@@ -228,7 +228,7 @@ const hasOAuthProviders = () => {
           to="/forgot-password"
           class="text-gray-500 hover:underline focus:ring-2 focus:ring-blue-500 focus:outline-none rounded"
         >
-          Forgot your password?
+          Esqueceu sua senha?
         </RouterLink>
       </p>
     </div>

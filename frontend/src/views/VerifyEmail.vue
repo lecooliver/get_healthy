@@ -13,7 +13,7 @@ const handleVerify = async () => {
   const token = params.get('token')
 
   if (!token) {
-    error.value = 'Invalid verification link. Please check your email for the correct link.'
+    error.value = 'Link de verificação inválido. Confira o link recebido por e-mail.'
     return
   }
 
@@ -29,7 +29,7 @@ const handleVerify = async () => {
 
     if (!response.ok) {
       const data = await response.json()
-      throw new Error(data.error || 'Verification failed')
+      throw new Error(data.error || 'Não foi possível verificar o e-mail.')
     }
 
     success.value = true
@@ -52,7 +52,7 @@ onMounted(() => {
         Get Healthy
       </h1>
       <p class="text-gray-600 dark:text-gray-400">
-        Email Verification
+        Verificação de e-mail
       </p>
     </div>
     
@@ -63,7 +63,7 @@ onMounted(() => {
       >
         <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4" />
         <p class="text-gray-600 dark:text-gray-400">
-          Verifying your email...
+          Verificando seu e-mail...
         </p>
       </div>
 
@@ -75,16 +75,16 @@ onMounted(() => {
           ✅
         </div>
         <h2 class="text-xl font-semibold">
-          Email Verified!
+          E-mail verificado!
         </h2>
         <p class="text-gray-600 dark:text-gray-400">
-          Your email has been successfully verified. You can now access all features.
+          Seu e-mail foi verificado. Agora você pode acessar todos os recursos.
         </p>
         <button
           class="btn btn-primary"
           @click="router.push('/dashboard')"
         >
-          Go to Dashboard
+          Ir para o painel
         </button>
       </div>
 
@@ -96,16 +96,16 @@ onMounted(() => {
           ❌
         </div>
         <h2 class="text-xl font-semibold text-red-600 dark:text-red-400">
-          Verification Failed
+          Falha na verificação
         </h2>
         <p class="text-gray-600 dark:text-gray-400">
-          {{ error || 'The verification link is invalid or has expired.' }}
+          {{ error || 'O link de verificação é inválido ou expirou.' }}
         </p>
         <button
           class="btn btn-primary"
           @click="router.push('/dashboard')"
         >
-          Go to Dashboard
+          Ir para o painel
         </button>
       </div>
     </div>

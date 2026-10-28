@@ -2,6 +2,7 @@
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
+import { translatePrebuiltText } from '@/utils/prebuiltTemplateTranslations'
 
 const route = useRoute()
 const router = useRouter()
@@ -9,6 +10,28 @@ const authStore = useAuthStore()
 
 const template = ref(null)
 const loading = ref(true)
+const typeLabels = {
+  weightlifting: 'Musculação',
+  aerobic: 'Aeróbico',
+  flexibility: 'Flexibilidade',
+  combination: 'Combinado'
+}
+const difficultyLabels = {
+  beginner: 'Iniciante',
+  intermediate: 'Intermediário',
+  advanced: 'Avançado'
+}
+const goalLabels = {
+  strength: 'Força',
+  endurance: 'Resistência',
+  flexibility: 'Flexibilidade',
+  weight_loss: 'Perda de peso',
+  hypertrophy: 'Hipertrofia',
+  recovery: 'Recuperação',
+  general_fitness: 'Condicionamento geral'
+}
+
+const getTranslatedLabel = (value, labels) => labels[value] || value.replaceAll('_', ' ')
 
 onMounted(async () => {
   await loadTemplate()
@@ -23,7 +46,7 @@ const loadTemplate = async () => {
       template.value = await response.json()
     }
   } catch (error) {
-    console.error('Failed to load template:', error)
+    console.error('Não foi possível carregar o modelo:', error)
   } finally {
     loading.value = false
   }
@@ -40,7 +63,7 @@ const startFromTemplate = async () => {
       router.push('/routines')
     }
   } catch (error) {
-    console.error('Failed to start from template:', error)
+    console.error('Não foi possível iniciar pelo modelo:', error)
   }
 }
 </script>
@@ -51,7 +74,7 @@ const startFromTemplate = async () => {
       class="text-blue-600 hover:underline"
       @click="router.push('/templates')"
     >
-      ← Back to Templates
+      ← Voltar aos modelos
     </button>
 
     <div
@@ -66,33 +89,33 @@ const startFromTemplate = async () => {
         <div class="flex items-start justify-between mb-4">
           <div>
             <h1 class="text-2xl font-bold">
-              {{ template.name }}
+              {{ translatePrebuiltText(template.name) }}
             </h1>
             <p class="text-gray-600 dark:text-gray-400 mt-1">
-              {{ template.description }}
+              {{ translatePrebuiltText(template.description) }}
             </p>
           </div>
           <button
             class="btn btn-primary"
             @click="startFromTemplate"
           >
-            Start This Template
+            Usar este modelo
           </button>
         </div>
 
         <div class="flex flex-wrap gap-2">
           <span class="px-3 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-400 rounded-full text-sm capitalize">
-            {{ template.type }}
+            {{ getTranslatedLabel(template.type, typeLabels) }}
           </span>
           <span class="px-3 py-1 bg-gray-100 dark:bg-gray-700 rounded-full text-sm capitalize">
-            {{ template.difficulty }}
+            {{ getTranslatedLabel(template.difficulty, difficultyLabels) }}
           </span>
           <span
             v-for="goal in template.goals"
             :key="goal"
             class="px-3 py-1 bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-400 rounded-full text-sm capitalize"
           >
-            {{ goal.replace('_', ' ') }}
+            {{ getTranslatedLabel(goal, goalLabels) }}
           </span>
         </div>
       </div>
@@ -103,7 +126,7 @@ const startFromTemplate = async () => {
         class="card"
       >
         <h2 class="text-lg font-semibold mb-4">
-          {{ workout.name }}
+          {{ translatePrebuiltText(workout.name) }}
         </h2>
         
         <div
@@ -116,7 +139,7 @@ const startFromTemplate = async () => {
             class="border border-gray-200 dark:border-gray-600 rounded-lg p-3"
           >
             <h3 class="font-medium text-gray-700 dark:text-gray-300 mb-2">
-              {{ group.name }}
+              {{ translatePrebuiltText(group.name) }}
             </h3>
             
             <div
@@ -131,14 +154,14 @@ const startFromTemplate = async () => {
                 <span class="text-gray-400 font-medium w-6">{{ idx + 1 }}</span>
                 <div class="flex-1">
                   <div class="font-medium">
-                    {{ exercise.name }}
+                    {{ translatePrebuiltText(exercise.name) }}
                   </div>
                   <div class="text-sm text-gray-500">
                     <span v-if="exercise.defaultSets && exercise.defaultReps">
-                      {{ exercise.defaultSets }} × {{ exercise.defaultReps }} reps
+                      {{ exercise.defaultSets }} × {{ exercise.defaultReps }} repetições
                     </span>
                     <span v-if="exercise.restSeconds">
-                      • {{ exercise.restSeconds }}s rest
+                      • {{ exercise.restSeconds }} s de descanso
                     </span>
                     <span v-if="exercise.durationMinutes">
                       {{ exercise.durationMinutes }} min
@@ -154,7 +177,7 @@ const startFromTemplate = async () => {
               v-else
               class="text-gray-500 text-sm py-2"
             >
-              No exercises
+              Nenhum exercício
             </div>
           </div>
         </div>
@@ -162,7 +185,7 @@ const startFromTemplate = async () => {
           v-else
           class="text-gray-500 text-center py-4"
         >
-          No exercise groups
+          Nenhum grupo de exercícios
         </div>
       </div>
     </template>

@@ -2,6 +2,7 @@
 import { ref, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
+import { translatePrebuiltText } from '@/utils/prebuiltTemplateTranslations'
 
 const router = useRouter()
 const authStore = useAuthStore()
@@ -19,21 +20,37 @@ const newTemplate = ref({
   type: 'weightlifting',
   difficulty: 'beginner',
   isPublic: false,
-  workouts: [{ name: 'Workout 1', exerciseGroups: [{ name: 'Main Exercises', exercises: [{ name: '', type: 'strength', defaultSets: 3, defaultReps: 10 }] }] }]
+  workouts: [{ name: 'Treino 1', exerciseGroups: [{ name: 'Exercícios principais', exercises: [{ name: '', type: 'strength', defaultSets: 3, defaultReps: 10 }] }] }]
 })
 
 const types = ['all', 'weightlifting', 'aerobic', 'flexibility', 'combination']
 const goals = ['all', 'strength', 'endurance', 'flexibility', 'weight_loss', 'general_fitness']
 
 const goalLabels = {
-  strength: 'Strength',
-  endurance: 'Endurance',
-  flexibility: 'Flexibility',
-  weight_loss: 'Weight Loss',
-  hypertrophy: 'Hypertrophy',
-  recovery: 'Recovery',
-  general_fitness: 'General Fitness'
+  strength: 'Força',
+  endurance: 'Resistência',
+  flexibility: 'Flexibilidade',
+  weight_loss: 'Perda de peso',
+  hypertrophy: 'Hipertrofia',
+  recovery: 'Recuperação',
+  general_fitness: 'Condicionamento geral'
 }
+
+const typeLabels = {
+  weightlifting: 'Musculação',
+  aerobic: 'Aeróbico',
+  flexibility: 'Flexibilidade',
+  combination: 'Combinado'
+}
+
+const difficultyLabels = {
+  beginner: 'Iniciante',
+  intermediate: 'Intermediário',
+  advanced: 'Avançado'
+}
+
+const getTypeLabel = (type) => typeLabels[type] || type
+const getDifficultyLabel = (difficulty) => difficultyLabels[difficulty] || difficulty
 
 onMounted(async () => {
   await loadTemplates()
@@ -48,7 +65,7 @@ const loadTemplates = async () => {
       templates.value = await response.json()
     }
   } catch (error) {
-    console.error('Failed to load templates:', error)
+    console.error('Não foi possível carregar os modelos:', error)
   } finally {
     loading.value = false
   }
@@ -74,7 +91,7 @@ const startFromTemplate = async (template) => {
       router.push('/routines')
     }
   } catch (error) {
-    console.error('Failed to start from template:', error)
+    console.error('Não foi possível iniciar pelo modelo:', error)
   } finally {
     starting.value = null
   }
@@ -121,14 +138,14 @@ const closeCreateModal = () => {
     type: 'weightlifting',
     difficulty: 'beginner',
     isPublic: false,
-    workouts: [{ name: 'Workout 1', exerciseGroups: [{ name: 'Main Exercises', exercises: [{ name: '', type: 'strength', defaultSets: 3, defaultReps: 10 }] }] }]
+    workouts: [{ name: 'Treino 1', exerciseGroups: [{ name: 'Exercícios principais', exercises: [{ name: '', type: 'strength', defaultSets: 3, defaultReps: 10 }] }] }]
   }
 }
 
 const addWorkout = () => {
   newTemplate.value.workouts.push({
-    name: `Workout ${newTemplate.value.workouts.length + 1}`,
-    exerciseGroups: [{ name: 'Main Exercises', exercises: [{ name: '', type: 'strength', defaultSets: 3, defaultReps: 10 }] }]
+    name: `Treino ${newTemplate.value.workouts.length + 1}`,
+    exerciseGroups: [{ name: 'Exercícios principais', exercises: [{ name: '', type: 'strength', defaultSets: 3, defaultReps: 10 }] }]
   })
 }
 
@@ -140,7 +157,7 @@ const removeWorkout = (index) => {
 
 const addExerciseGroup = (workoutIndex) => {
   newTemplate.value.workouts[workoutIndex].exerciseGroups.push({
-    name: `Group ${newTemplate.value.workouts[workoutIndex].exerciseGroups.length + 1}`,
+    name: `Grupo ${newTemplate.value.workouts[workoutIndex].exerciseGroups.length + 1}`,
     exercises: [{ name: '', type: 'strength', defaultSets: 3, defaultReps: 10 }]
   })
 }
@@ -202,7 +219,7 @@ const createTemplate = async () => {
       closeCreateModal()
     }
   } catch (error) {
-    console.error('Failed to create template:', error)
+    console.error('Não foi possível criar o modelo:', error)
   } finally {
     creating.value = false
   }
@@ -213,19 +230,19 @@ const createTemplate = async () => {
   <div class="space-y-6">
     <div class="flex items-center justify-between">
       <h1 class="text-2xl font-bold">
-        Workout Templates
+        Modelos de treino
       </h1>
       <button
         class="btn btn-primary"
         @click="openCreateModal"
       >
-        + Create Template
+        + Criar modelo
       </button>
     </div>
 
     <div class="flex flex-wrap gap-4">
       <div>
-        <label class="block text-sm font-medium mb-1">Type</label>
+        <label class="block text-sm font-medium mb-1">Tipo</label>
         <select
           v-model="filterType"
           class="input"
@@ -235,12 +252,12 @@ const createTemplate = async () => {
             :key="t"
             :value="t"
           >
-            {{ t === 'all' ? 'All Types' : t.charAt(0).toUpperCase() + t.slice(1) }}
+            {{ t === 'all' ? 'Todos os tipos' : getTypeLabel(t) }}
           </option>
         </select>
       </div>
       <div>
-        <label class="block text-sm font-medium mb-1">Goal</label>
+        <label class="block text-sm font-medium mb-1">Objetivo</label>
         <select
           v-model="filterGoal"
           class="input"
@@ -250,7 +267,7 @@ const createTemplate = async () => {
             :key="g"
             :value="g"
           >
-            {{ g === 'all' ? 'All Goals' : getGoalLabel(g) }}
+            {{ g === 'all' ? 'Todos os objetivos' : getGoalLabel(g) }}
           </option>
         </select>
       </div>
@@ -271,10 +288,10 @@ const createTemplate = async () => {
         📋
       </div>
       <p class="text-gray-600 dark:text-gray-400">
-        No templates found
+        Nenhum modelo encontrado
       </p>
       <p class="text-sm text-gray-500 mt-2">
-        Check back later or create your own template
+        Volte mais tarde ou crie seu próprio modelo
       </p>
     </div>
 
@@ -292,10 +309,10 @@ const createTemplate = async () => {
           <span class="text-3xl">{{ getTypeIcon(template.type) }}</span>
           <div class="flex-1">
             <h3 class="font-semibold">
-              {{ template.name }}
+              {{ translatePrebuiltText(template.name) }}
             </h3>
             <p class="text-sm text-gray-600 dark:text-gray-400 line-clamp-2">
-              {{ template.description }}
+              {{ translatePrebuiltText(template.description) }}
             </p>
           </div>
         </div>
@@ -305,7 +322,7 @@ const createTemplate = async () => {
             class="px-2 py-1 text-xs rounded capitalize"
             :class="getDifficultyColor(template.difficulty)"
           >
-            {{ template.difficulty }}
+            {{ getDifficultyLabel(template.difficulty) }}
           </span>
           <span
             v-for="goal in template.goals"
@@ -320,14 +337,14 @@ const createTemplate = async () => {
           v-if="template.workouts?.length > 0"
           class="text-sm text-gray-500 mb-4"
         >
-          {{ template.workouts.length }} workout(s) • {{ getExerciseCount(template) }} exercises
+          {{ template.workouts.length }} treinos • {{ getExerciseCount(template) }} exercícios
         </div>
 
         <button
           :disabled="starting === template.id"
           class="btn btn-primary w-full"
         >
-          {{ starting === template.id ? 'Creating...' : 'Use This Template' }}
+          {{ starting === template.id ? 'Criando...' : 'Usar este modelo' }}
         </button>
       </div>
     </div>
@@ -340,7 +357,7 @@ const createTemplate = async () => {
       <div class="bg-white dark:bg-gray-800 rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-xl">
         <div class="sticky top-0 bg-white dark:bg-gray-800 p-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
           <h3 class="text-lg font-semibold">
-            Create New Template
+            Criar novo modelo
           </h3>
           <button
             class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
@@ -352,60 +369,60 @@ const createTemplate = async () => {
         
         <div class="p-4 space-y-4">
           <div>
-            <label class="block text-sm font-medium mb-1">Template Name</label>
+            <label class="block text-sm font-medium mb-1">Nome do modelo</label>
             <input
               v-model="newTemplate.name"
               type="text"
               class="input w-full"
-              placeholder="My Custom Template"
+              placeholder="Meu modelo personalizado"
             >
           </div>
           
           <div>
-            <label class="block text-sm font-medium mb-1">Description</label>
+            <label class="block text-sm font-medium mb-1">Descrição</label>
             <textarea
               v-model="newTemplate.description"
               class="input w-full"
               rows="2"
-              placeholder="Describe this template..."
+              placeholder="Descreva este modelo..."
             />
           </div>
           
           <div class="grid grid-cols-2 gap-4">
             <div>
-              <label class="block text-sm font-medium mb-1">Type</label>
+              <label class="block text-sm font-medium mb-1">Tipo</label>
               <select
                 v-model="newTemplate.type"
                 class="input w-full"
               >
                 <option value="weightlifting">
-                  Weightlifting
+                  Musculação
                 </option>
                 <option value="aerobic">
-                  Aerobic
+                  Aeróbico
                 </option>
                 <option value="flexibility">
                   Flexibility
                 </option>
                 <option value="combination">
-                  Combination
+                  Combinado
                 </option>
               </select>
             </div>
             <div>
-              <label class="block text-sm font-medium mb-1">Difficulty</label>
+              <label class="block text-sm font-medium mb-1">Dificuldade</label>
               <select
                 v-model="newTemplate.difficulty"
                 class="input w-full"
               >
                 <option value="beginner">
-                  Beginner
+                  Iniciante
                 </option>
                 <option value="intermediate">
-                  Intermediate
+                  Intermediário
                 </option>
                 <option value="advanced">
-                  Advanced
+                  Avançado
                 </option>
               </select>
             </div>
@@ -421,19 +438,19 @@ const createTemplate = async () => {
             <label
               for="isPublic"
               class="text-sm"
-            >Make this template public</label>
+            >Tornar este modelo público</label>
           </div>
           
           <div class="border-t border-gray-200 dark:border-gray-700 pt-4">
             <div class="flex items-center justify-between mb-3">
               <h4 class="font-medium">
-                Workouts
+                Treinos
               </h4>
               <button
                 class="btn btn-secondary text-sm"
                 @click="addWorkout"
               >
-                + Add Workout
+                + Adicionar treino
               </button>
             </div>
             
@@ -447,25 +464,25 @@ const createTemplate = async () => {
                   v-model="workout.name"
                   type="text"
                   class="input flex-1"
-                  placeholder="Workout name"
+                  placeholder="Nome do treino"
                 >
                 <button
                   v-if="newTemplate.workouts.length > 1"
                   class="text-red-500 hover:text-red-700 text-sm"
                   @click="removeWorkout(wi)"
                 >
-                  Remove
+                  Remover
                 </button>
               </div>
               
               <div class="ml-2 mt-2">
                 <div class="flex items-center justify-between mb-2">
-                  <span class="text-sm font-medium">Exercise Groups</span>
+                  <span class="text-sm font-medium">Grupos de exercícios</span>
                   <button
                     class="btn btn-secondary text-xs"
                     @click="addExerciseGroup(wi)"
                   >
-                    + Add Group
+                    + Adicionar grupo
                   </button>
                 </div>
                 
@@ -479,14 +496,14 @@ const createTemplate = async () => {
                       v-model="group.name"
                       type="text"
                       class="input flex-1 text-sm"
-                      placeholder="Group name"
+                      placeholder="Nome do grupo"
                     >
                     <button
                       v-if="workout.exerciseGroups.length > 1"
                       class="text-red-500 hover:text-red-700 text-xs"
                       @click="removeExerciseGroup(wi, gi)"
                     >
-                      Remove
+                      Remover
                     </button>
                   </div>
                   
@@ -499,33 +516,33 @@ const createTemplate = async () => {
                       v-model="exercise.name"
                       type="text"
                       class="input flex-1 text-sm"
-                      placeholder="Exercise name"
+                      placeholder="Nome do exercício"
                     >
                     <select
                       v-model="exercise.type"
                       class="input w-24 text-sm"
                     >
                       <option value="strength">
-                        Strength
+                        Força
                       </option>
                       <option value="cardio">
-                        Cardio
+                        Aeróbico
                       </option>
                       <option value="flexibility">
-                        Flexibility
+                        Flexibilidade
                       </option>
                     </select>
                     <input
                       v-model.number="exercise.defaultSets"
                       type="number"
                       class="input w-14 text-sm"
-                      placeholder="Sets"
+                      placeholder="Séries"
                     >
                     <input
                       v-model.number="exercise.defaultReps"
                       type="number"
                       class="input w-14 text-sm"
-                      placeholder="Reps"
+                      placeholder="Repetições"
                     >
                     <button
                       v-if="group.exercises.length > 1"
@@ -540,7 +557,7 @@ const createTemplate = async () => {
                     class="text-xs text-blue-600 hover:text-blue-800 ml-2"
                     @click="addExercise(wi, gi)"
                   >
-                    + Add Exercise
+                    + Adicionar exercício
                   </button>
                 </div>
               </div>
@@ -554,13 +571,13 @@ const createTemplate = async () => {
             :disabled="creating || !newTemplate.name.trim()"
             @click="createTemplate"
           >
-            {{ creating ? 'Creating...' : 'Create Template' }}
+            {{ creating ? 'Criando...' : 'Criar modelo' }}
           </button>
           <button
             class="btn btn-secondary"
             @click="closeCreateModal"
           >
-            Cancel
+            Cancelar
           </button>
         </div>
       </div>

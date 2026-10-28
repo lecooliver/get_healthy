@@ -11,7 +11,7 @@ defineProps({
   <span class="relative inline-block group">
     <span
       role="img"
-      :aria-label="`Help: ${text}`"
+      :aria-label="`Ajuda: ${text}`"
       class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 cursor-help text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 rounded"
       tabindex="0"
     >ⓘ</span>

@@ -12,16 +12,16 @@ export const useUIStore = defineStore('ui', () => {
   const theme = ref(getStoredTheme())
 
   const navLinks = [
-    { to: '/dashboard', label: 'Dashboard', icon: '📊' },
-    { to: '/measurements', label: 'Measurements', icon: '📏' },
-    { to: '/photos', label: 'Photo Journal', icon: '📷' },
-    { to: '/routines', label: 'Routines', icon: '🏋️' },
-    { to: '/templates', label: 'Templates', icon: '📋' },
-    { to: '/schedule', label: 'Schedule', icon: '📅' },
-    { to: '/reports', label: 'Reports', icon: '📈' },
-    { to: '/export', label: 'Export', icon: '💾' },
-    { to: '/profile', label: 'Profile', icon: '👤' },
-    { to: '/admin', label: 'Admin', icon: '⚙️' }
+    { to: '/dashboard', label: 'Painel', icon: '📊' },
+    { to: '/measurements', label: 'Medidas', icon: '📏' },
+    { to: '/photos', label: 'Fotos', icon: '📷' },
+    { to: '/routines', label: 'Rotinas', icon: '🏋️' },
+    { to: '/templates', label: 'Modelos', icon: '📋' },
+    { to: '/schedule', label: 'Agenda', icon: '📅' },
+    { to: '/reports', label: 'Relatórios', icon: '📈' },
+    { to: '/export', label: 'Exportar dados', icon: '💾' },
+    { to: '/profile', label: 'Perfil', icon: '👤' },
+    { to: '/admin', label: 'Administração', icon: '⚙️' }
   ]
 
   const setTheme = (newTheme) => {

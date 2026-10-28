@@ -2,6 +2,7 @@
 import { ref, onMounted, computed, nextTick, watch } from 'vue'
 import { useAuthStore } from '@/stores/auth'
 import { Chart, registerables } from 'chart.js'
+import { translatePrebuiltText } from '@/utils/prebuiltTemplateTranslations'
 
 Chart.register(...registerables)
 
@@ -18,10 +19,10 @@ const chartContainer = ref(null)
 let strengthChart = null
 
 const tabs = [
-  { id: 'progress', label: 'Progress', icon: '📈' },
-  { id: 'calories', label: 'Calories', icon: '🔥' },
-  { id: 'time', label: 'Time of Day', icon: '🕐' },
-  { id: 'frequency', label: 'Frequency', icon: '📅' }
+  { id: 'progress', label: 'Progresso', icon: '📈' },
+  { id: 'calories', label: 'Calorias', icon: '🔥' },
+  { id: 'time', label: 'Horário', icon: '🕐' },
+  { id: 'frequency', label: 'Frequência', icon: '📅' }
 ]
 
 onMounted(async () => {
@@ -49,7 +50,7 @@ const loadProgress = async () => {
       }
     }
   } catch (error) {
-    console.error('Failed to load progress:', error)
+    console.error('Não foi possível carregar o progresso:', error)
   }
 }
 
@@ -62,7 +63,7 @@ const loadCalories = async () => {
       caloriesData.value = await response.json()
     }
   } catch (error) {
-    console.error('Failed to load calories:', error)
+    console.error('Não foi possível carregar as calorias:', error)
   }
 }
 
@@ -75,7 +76,7 @@ const loadTimeOfDay = async () => {
       timeOfDayData.value = await response.json()
     }
   } catch (error) {
-    console.error('Failed to load time of day data:', error)
+    console.error('Não foi possível carregar os dados por horário:', error)
   }
 }
 
@@ -88,7 +89,7 @@ const loadFrequency = async () => {
       frequencyData.value = await response.json()
     }
   } catch (error) {
-    console.error('Failed to load frequency data:', error)
+    console.error('Não foi possível carregar os dados de frequência:', error)
   }
 }
 
@@ -128,7 +129,7 @@ const createChart = () => {
     data: {
       labels: data.map(d => d.date),
       datasets: [{
-        label: 'Max Weight (lb)',
+        label: 'Peso máximo (lb)',
         data: data.map(d => d.maxWeight),
         borderColor: '#3b82f6',
         backgroundColor: 'rgba(59, 130, 246, 0.1)',
@@ -153,7 +154,7 @@ const createChart = () => {
           callbacks: {
             label: (context) => {
               const entry = data[context.dataIndex]
-              return `${context.parsed.y} lb (${entry.sets} sets, ${entry.volume} vol)`
+              return `${context.parsed.y} lb (${entry.sets} séries, ${entry.volume} de volume)`
             }
           }
         }
@@ -190,7 +191,7 @@ watch(() => progressData.value.strength, async (newStrength) => {
 <template>
   <div class="space-y-6">
     <h1 class="text-2xl font-bold">
-      Reports & Analytics
+      Relatórios e análises
     </h1>
 
     <div class="flex gap-2 border-b border-gray-200 dark:border-gray-700">
@@ -222,13 +223,13 @@ watch(() => progressData.value.strength, async (newStrength) => {
       >
         <div class="card">
           <h2 class="text-lg font-semibold mb-4">
-            Body Measurements (Last 90 Days)
+            Medidas corporais (últimos 90 dias)
           </h2>
           <div
             v-if="progressData.body?.length === 0"
             class="text-center py-8 text-gray-500"
           >
-            No body measurement data recorded yet
+            Nenhuma medida corporal registrada
           </div>
           <div
             v-else
@@ -239,7 +240,7 @@ watch(() => progressData.value.strength, async (newStrength) => {
               :key="p.date"
               class="flex items-center justify-between p-2 bg-gray-50 dark:bg-gray-700/50 rounded"
             >
-              <span class="text-sm text-gray-600">{{ new Date(p.date).toLocaleDateString() }}</span>
+              <span class="text-sm text-gray-600">{{ new Date(p.date).toLocaleDateString('pt-BR') }}</span>
               <span class="font-medium">{{ p.value }} lb</span>
             </div>
           </div>
@@ -247,13 +248,13 @@ watch(() => progressData.value.strength, async (newStrength) => {
 
         <div class="card">
           <h2 class="text-lg font-semibold mb-4">
-            Strength Training Progress
+            Progresso na musculação
           </h2>
           <div
             v-if="!progressData.strength?.length"
             class="text-center py-8 text-gray-500"
           >
-            No strength training data recorded yet
+            Nenhum dado de musculação registrado
           </div>
           <template v-else>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
@@ -262,7 +263,7 @@ watch(() => progressData.value.strength, async (newStrength) => {
                   {{ totalStrengthProgress.improved }}
                 </div>
                 <div class="text-sm text-gray-600">
-                  Exercises Improved
+                  Exercícios com evolução
                 </div>
               </div>
               <div class="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
@@ -270,7 +271,7 @@ watch(() => progressData.value.strength, async (newStrength) => {
                   {{ totalStrengthProgress.maintained }}
                 </div>
                 <div class="text-sm text-gray-600">
-                  Maintained
+                  Mantidos
                 </div>
               </div>
               <div class="p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
@@ -278,13 +279,13 @@ watch(() => progressData.value.strength, async (newStrength) => {
                   {{ totalStrengthProgress.total }}
                 </div>
                 <div class="text-sm text-gray-600">
-                  Total Exercises
+                  Total de exercícios
                 </div>
               </div>
             </div>
 
             <div class="mb-4">
-              <label class="block text-sm font-medium mb-2">Select Exercise</label>
+              <label class="block text-sm font-medium mb-2">Selecionar exercício</label>
               <select
                 v-model="selectedExercise"
                 class="w-full p-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600"
@@ -294,7 +295,7 @@ watch(() => progressData.value.strength, async (newStrength) => {
                   :key="exercise.name"
                   :value="exercise"
                 >
-                  {{ exercise.name }} ({{ exercise.startingMax }} → {{ exercise.currentMax }} lb)
+                  {{ translatePrebuiltText(exercise.name) }} ({{ exercise.startingMax }} → {{ exercise.currentMax }} lb)
                   <span
                     v-if="exercise.totalProgress > 0"
                     class="text-green-600"
@@ -308,12 +309,12 @@ watch(() => progressData.value.strength, async (newStrength) => {
               class="space-y-4"
             >
               <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
-                <span class="font-medium">{{ selectedExercise.name }}</span>
+                <span class="font-medium">{{ translatePrebuiltText(selectedExercise.name) }}</span>
                 <span
                   :class="selectedExercise.totalProgress >= 0 ? 'text-green-600' : 'text-red-600'"
                   class="font-bold"
                 >
-                  {{ selectedExercise.totalProgress >= 0 ? '+' : '' }}{{ selectedExercise.totalProgress }} lb total
+                  {{ selectedExercise.totalProgress >= 0 ? '+' : '' }}{{ selectedExercise.totalProgress }} lb no total
                 </span>
               </div>
               <div class="text-sm text-gray-500">
@@ -343,7 +344,7 @@ watch(() => progressData.value.strength, async (newStrength) => {
               {{ totalCalories().toLocaleString() }}
             </div>
             <div class="text-sm text-gray-500">
-              Calories This Week
+              Calorias nesta semana
             </div>
           </div>
           <div class="card">
@@ -354,7 +355,7 @@ watch(() => progressData.value.strength, async (newStrength) => {
               {{ caloriesData.length }}
             </div>
             <div class="text-sm text-gray-500">
-              Cardio Sessions
+              Sessões de cardio
             </div>
           </div>
           <div class="card">
@@ -365,7 +366,7 @@ watch(() => progressData.value.strength, async (newStrength) => {
               {{ caloriesData.length > 0 ? Math.round(totalCalories() / caloriesData.length) : 0 }}
             </div>
             <div class="text-sm text-gray-500">
-              Avg Calories/Session
+              Média de calorias por sessão
             </div>
           </div>
         </div>
@@ -377,7 +378,7 @@ watch(() => progressData.value.strength, async (newStrength) => {
       >
         <div class="card">
           <h2 class="text-lg font-semibold mb-4">
-            Workouts by Time of Day
+            Treinos por horário
           </h2>
           <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div class="p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg">
@@ -388,10 +389,10 @@ watch(() => progressData.value.strength, async (newStrength) => {
                 {{ timeOfDayData.morning?.count || 0 }}
               </div>
               <div class="text-sm text-gray-600">
-                Morning (5am-12pm)
+                Manhã (5h às 12h)
               </div>
               <div class="text-xs text-gray-500 mt-1">
-                Avg: {{ Math.round(timeOfDayData.morning?.avgDuration || 0) }} min
+                Média: {{ Math.round(timeOfDayData.morning?.avgDuration || 0) }} min
               </div>
             </div>
             <div class="p-4 bg-orange-50 dark:bg-orange-900/20 rounded-lg">
@@ -402,10 +403,10 @@ watch(() => progressData.value.strength, async (newStrength) => {
                 {{ timeOfDayData.afternoon?.count || 0 }}
               </div>
               <div class="text-sm text-gray-600">
-                Afternoon (12pm-5pm)
+                Tarde (12h às 17h)
               </div>
               <div class="text-xs text-gray-500 mt-1">
-                Avg: {{ Math.round(timeOfDayData.afternoon?.avgDuration || 0) }} min
+                Média: {{ Math.round(timeOfDayData.afternoon?.avgDuration || 0) }} min
               </div>
             </div>
             <div class="p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
@@ -416,10 +417,10 @@ watch(() => progressData.value.strength, async (newStrength) => {
                 {{ timeOfDayData.evening?.count || 0 }}
               </div>
               <div class="text-sm text-gray-600">
-                Evening (5pm+)
+                Noite (a partir das 17h)
               </div>
               <div class="text-xs text-gray-500 mt-1">
-                Avg: {{ Math.round(timeOfDayData.evening?.avgDuration || 0) }} min
+                Média: {{ Math.round(timeOfDayData.evening?.avgDuration || 0) }} min
               </div>
             </div>
           </div>
@@ -432,13 +433,13 @@ watch(() => progressData.value.strength, async (newStrength) => {
       >
         <div class="card">
           <h2 class="text-lg font-semibold mb-4">
-            Workout Frequency (Last 30 Days)
+            Frequência de treinos (últimos 30 dias)
           </h2>
           <div
             v-if="Object.keys(frequencyData).length === 0"
             class="text-center py-8 text-gray-500"
           >
-            No workout data in the last 30 days
+            Nenhum treino registrado nos últimos 30 dias
           </div>
           <div
             v-else
@@ -449,17 +450,17 @@ watch(() => progressData.value.strength, async (newStrength) => {
               :key="date"
               class="aspect-square rounded"
               :class="day.count > 0 ? 'bg-blue-500' : 'bg-gray-200 dark:bg-gray-700'"
-              :title="`${date}: ${day.count} workout(s)`"
+              :title="`${date}: ${day.count} treino(s)`"
             />
           </div>
           <div class="flex items-center gap-4 mt-4 text-sm text-gray-500">
             <div class="flex items-center gap-1">
               <div class="w-4 h-4 rounded bg-gray-200 dark:bg-gray-700" />
-              <span>No workout</span>
+              <span>Sem treino</span>
             </div>
             <div class="flex items-center gap-1">
               <div class="w-4 h-4 rounded bg-blue-500" />
-              <span>Workout</span>
+              <span>Treino</span>
             </div>
           </div>
         </div>

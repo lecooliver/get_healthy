@@ -16,23 +16,23 @@ const stats = ref({
 const loading = ref(true)
 
 const motivationalMessages = [
-  "Every workout counts! Keep pushing forward.",
-  "Your body can do it. It's your mind you need to convince.",
-  "The only bad workout is the one that didn't happen.",
-  "Small progress is still progress.",
-  "Consistency beats perfection.",
-  "You're stronger than you think.",
-  "One day at a time, one rep at a time.",
-  "Champions train, losers complain.",
-  "Your health is an investment, not an expense.",
-  "The pain you feel today will be the strength you feel tomorrow."
+  'Todo treino conta! Continue avançando.',
+  'Seu corpo consegue. Você só precisa convencer sua mente.',
+  'O único treino ruim é aquele que não aconteceu.',
+  'Pequenos avanços também são progresso.',
+  'Constância vale mais que perfeição.',
+  'Você é mais forte do que imagina.',
+  'Um dia de cada vez, uma repetição de cada vez.',
+  'Quem quer resultados treina; quem não quer, encontra desculpas.',
+  'Sua saúde é um investimento, não uma despesa.',
+  'A dificuldade de hoje será a sua força de amanhã.'
 ]
 
 const getGreeting = () => {
   const hour = new Date().getHours()
-  if (hour < 12) return 'Good morning'
-  if (hour < 18) return 'Good afternoon'
-  return 'Good evening'
+  if (hour < 12) return 'Bom dia'
+  if (hour < 18) return 'Boa tarde'
+  return 'Boa noite'
 }
 
 const getRandomMotivation = () => {
@@ -56,7 +56,7 @@ onMounted(async () => {
       stats.value = data.stats || stats.value
     }
   } catch (error) {
-    console.error('Failed to load dashboard data:', error)
+    console.error('Não foi possível carregar os dados do painel:', error)
   } finally {
     loading.value = false
   }
@@ -68,7 +68,7 @@ onMounted(async () => {
     <div class="flex items-center justify-between">
       <div>
         <h1 class="text-2xl font-bold">
-          {{ greeting }}, {{ authStore.user?.displayName || 'Athlete' }}
+          {{ greeting }}, {{ authStore.user?.displayName || 'Atleta' }}
         </h1>
         <p class="text-gray-600 dark:text-gray-400 mt-1">
           {{ motivationalMessage }}
@@ -96,7 +96,7 @@ onMounted(async () => {
             {{ stats.workoutsThisWeek }}
           </div>
           <div class="text-sm text-gray-600 dark:text-gray-400">
-            Workouts This Week
+            Treinos nesta semana
           </div>
         </div>
         
@@ -108,7 +108,7 @@ onMounted(async () => {
             {{ stats.totalWorkouts }}
           </div>
           <div class="text-sm text-gray-600 dark:text-gray-400">
-            Total Workouts
+            Total de treinos
           </div>
         </div>
         
@@ -120,7 +120,7 @@ onMounted(async () => {
             {{ stats.currentStreak }}
           </div>
           <div class="text-sm text-gray-600 dark:text-gray-400">
-            Day Streak
+            Dias consecutivos
           </div>
         </div>
         
@@ -132,7 +132,7 @@ onMounted(async () => {
             {{ stats.caloriesBurned.toLocaleString() }}
           </div>
           <div class="text-sm text-gray-600 dark:text-gray-400">
-            Calories Burned
+            Calorias gastas
           </div>
         </div>
       </div>
@@ -140,7 +140,7 @@ onMounted(async () => {
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div class="card">
           <h2 class="text-lg font-semibold mb-4">
-            Quick Actions
+            Ações rápidas
           </h2>
           <div class="grid grid-cols-2 gap-3">
             <RouterLink
@@ -151,7 +151,7 @@ onMounted(async () => {
                 ➕
               </div>
               <div class="font-medium">
-                Start Workout
+                Iniciar treino
               </div>
             </RouterLink>
             <RouterLink
@@ -162,7 +162,7 @@ onMounted(async () => {
                 📋
               </div>
               <div class="font-medium">
-                Browse Templates
+                Explorar modelos
               </div>
             </RouterLink>
             <RouterLink
@@ -173,7 +173,7 @@ onMounted(async () => {
                 📏
               </div>
               <div class="font-medium">
-                Log Measurements
+                Registrar medidas
               </div>
             </RouterLink>
             <RouterLink
@@ -184,7 +184,7 @@ onMounted(async () => {
                 📈
               </div>
               <div class="font-medium">
-                View Progress
+                Ver progresso
               </div>
             </RouterLink>
           </div>
@@ -192,7 +192,7 @@ onMounted(async () => {
 
         <div class="card">
           <h2 class="text-lg font-semibold mb-4">
-            Recent Activity
+            Atividade recente
           </h2>
           <div
             v-if="recentActivity.length === 0"
@@ -201,7 +201,7 @@ onMounted(async () => {
             <div class="text-4xl mb-2">
               🏃
             </div>
-            <p>No recent activity yet. Start your first workout!</p>
+            <p>Nenhuma atividade recente. Comece seu primeiro treino!</p>
           </div>
           <div
             v-else

@@ -22,7 +22,7 @@ const handleSubmit = async () => {
 
     if (!response.ok) {
       const data = await response.json()
-      throw new Error(data.error || 'Failed to send reset email')
+      throw new Error(data.error || 'Não foi possível enviar o e-mail de redefinição.')
     }
 
     success.value = true
@@ -41,7 +41,7 @@ const handleSubmit = async () => {
         Get Healthy
       </h1>
       <p class="text-gray-600 dark:text-gray-400">
-        Reset your password
+        Redefina sua senha
       </p>
     </div>
     
@@ -54,16 +54,16 @@ const handleSubmit = async () => {
           📧
         </div>
         <h2 class="text-xl font-semibold">
-          Check your email
+          Confira seu e-mail
         </h2>
         <p class="text-gray-600 dark:text-gray-400">
-          If an account exists with that email, we've sent password reset instructions.
+          Se houver uma conta com esse endereço, enviaremos as instruções para redefinir sua senha.
         </p>
         <button
           class="btn btn-primary"
           @click="router.push('/login')"
         >
-          Back to Login
+          Voltar para o acesso
         </button>
       </div>
 
@@ -80,16 +80,16 @@ const handleSubmit = async () => {
         </div>
         
         <p class="text-sm text-gray-600 dark:text-gray-400">
-          Enter your email address and we'll send you instructions to reset your password.
+          Informe seu endereço de e-mail e enviaremos as instruções para redefinir sua senha.
         </p>
         
         <div>
-          <label class="block text-sm font-medium mb-1">Email</label>
+          <label class="block text-sm font-medium mb-1">E-mail</label>
           <input
             v-model="email"
             type="email"
             class="input"
-            placeholder="you@example.com"
+            placeholder="voce@exemplo.com"
             autocomplete="email"
             required
           >
@@ -100,17 +100,17 @@ const handleSubmit = async () => {
           class="btn btn-primary w-full"
           :disabled="loading"
         >
-          {{ loading ? 'Sending...' : 'Send Reset Link' }}
+          {{ loading ? 'Enviando...' : 'Enviar link de redefinição' }}
         </button>
       </form>
       
       <p class="text-center text-sm text-gray-600 dark:text-gray-400 mt-4">
-        Remember your password?
+        Lembrou sua senha?
         <RouterLink
           to="/login"
           class="text-blue-600 dark:text-blue-400 hover:underline"
         >
-          Sign in
+          Entrar
         </RouterLink>
       </p>
     </div>

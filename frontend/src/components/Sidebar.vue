@@ -26,12 +26,12 @@ onUnmounted(() => {
 <template>
   <aside
     role="complementary"
-    aria-label="Main navigation sidebar"
+    aria-label="Barra lateral de navegação principal"
     class="fixed left-0 top-16 bottom-0 w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 overflow-y-auto scrollbar-thin hidden md:block"
   >
     <nav
       role="navigation"
-      aria-label="Navigation menu"
+      aria-label="Menu de navegação"
       class="p-4 space-y-1"
     >
       <RouterLink

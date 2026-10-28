@@ -8,19 +8,19 @@ defineProps({
   },
   title: {
     type: String,
-    default: 'Confirm'
+    default: 'Confirmar'
   },
   message: {
     type: String,
-    default: 'Are you sure?'
+    default: 'Tem certeza?'
   },
   confirmText: {
     type: String,
-    default: 'Confirm'
+    default: 'Confirmar'
   },
   cancelText: {
     type: String,
-    default: 'Cancel'
+    default: 'Cancelar'
   },
   confirmClass: {
     type: String,

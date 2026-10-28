@@ -3,6 +3,7 @@ import { ref, onMounted, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import HelpIcon from '@/components/HelpIcon.vue'
+import { translatePrebuiltText } from '@/utils/prebuiltTemplateTranslations'
 
 const route = useRoute()
 const router = useRouter()
@@ -48,71 +49,117 @@ const archiveFilter = ref({
 
 const commonExercises = {
   strength: [
-    { name: 'Squat', muscle: 'Legs' },
-    { name: 'Bench Press', muscle: 'Chest' },
-    { name: 'Deadlift', muscle: 'Back' },
-    { name: 'Overhead Press', muscle: 'Shoulders' },
-    { name: 'Barbell Row', muscle: 'Back' },
-    { name: 'Pull-up', muscle: 'Back' },
-    { name: 'Lat Pulldown', muscle: 'Back' },
-    { name: 'Dumbbell Press', muscle: 'Chest' },
-    { name: 'Incline Bench Press', muscle: 'Chest' },
-    { name: 'Leg Press', muscle: 'Legs' },
-    { name: 'Romanian Deadlift', muscle: 'Hamstrings' },
-    { name: 'Leg Curl', muscle: 'Hamstrings' },
-    { name: 'Leg Extension', muscle: 'Quads' },
-    { name: 'Calf Raise', muscle: 'Calves' },
-    { name: 'Bicep Curl', muscle: 'Biceps' },
-    { name: 'Tricep Pushdown', muscle: 'Triceps' },
-    { name: 'Skull Crusher', muscle: 'Triceps' },
-    { name: 'Lateral Raise', muscle: 'Shoulders' },
-    { name: 'Face Pull', muscle: 'Rear Delts' },
-    { name: 'Shrug', muscle: 'Traps' },
-    { name: 'Plank', muscle: 'Core' },
-    { name: 'Crunch', muscle: 'Core' },
-    { name: 'Push-up', muscle: 'Chest' },
-    { name: 'Dip', muscle: 'Triceps' },
-    { name: 'Hip Thrust', muscle: 'Glutes' },
-    { name: 'Cable Fly', muscle: 'Chest' }
+    { name: 'Agachamento', muscle: 'Legs' },
+    { name: 'Supino', muscle: 'Chest' },
+    { name: 'Levantamento terra', muscle: 'Back' },
+    { name: 'Desenvolvimento', muscle: 'Shoulders' },
+    { name: 'Remada curvada', muscle: 'Back' },
+    { name: 'Barra fixa', muscle: 'Back' },
+    { name: 'Puxada alta', muscle: 'Back' },
+    { name: 'Supino com halteres', muscle: 'Chest' },
+    { name: 'Supino inclinado', muscle: 'Chest' },
+    { name: 'Leg press', muscle: 'Legs' },
+    { name: 'Levantamento terra romeno', muscle: 'Hamstrings' },
+    { name: 'Mesa flexora', muscle: 'Hamstrings' },
+    { name: 'Cadeira extensora', muscle: 'Quads' },
+    { name: 'Elevação de panturrilha', muscle: 'Calves' },
+    { name: 'Rosca bíceps', muscle: 'Biceps' },
+    { name: 'Tríceps na polia', muscle: 'Triceps' },
+    { name: 'Tríceps testa', muscle: 'Triceps' },
+    { name: 'Elevação lateral', muscle: 'Shoulders' },
+    { name: 'Face pull', muscle: 'Rear Delts' },
+    { name: 'Encolhimento', muscle: 'Traps' },
+    { name: 'Prancha', muscle: 'Core' },
+    { name: 'Abdominal', muscle: 'Core' },
+    { name: 'Flexão de braço', muscle: 'Chest' },
+    { name: 'Mergulho', muscle: 'Triceps' },
+    { name: 'Elevação pélvica', muscle: 'Glutes' },
+    { name: 'Crucifixo na polia', muscle: 'Chest' }
   ],
   cardio: [
-    { name: 'Running', type: 'Treadmill' },
-    { name: 'Cycling', type: 'Bike' },
-    { name: 'Elliptical', type: 'Machine' },
-    { name: 'Rowing', type: 'Machine' },
-    { name: 'Jump Rope', type: 'Equipment' },
-    { name: 'Stair Climber', type: 'Machine' },
-    { name: 'Swimming', type: 'Pool' },
-    { name: 'Walking', type: 'Outdoor' },
-    { name: 'Hiking', type: 'Outdoor' },
-    { name: 'Box Jump', type: 'Plyometric' },
+    { name: 'Corrida', type: 'Treadmill' },
+    { name: 'Ciclismo', type: 'Bike' },
+    { name: 'Elíptico', type: 'Machine' },
+    { name: 'Remo', type: 'Machine' },
+    { name: 'Pular corda', type: 'Equipment' },
+    { name: 'Escada', type: 'Machine' },
+    { name: 'Natação', type: 'Pool' },
+    { name: 'Caminhada', type: 'Outdoor' },
+    { name: 'Trilha', type: 'Outdoor' },
+    { name: 'Salto na caixa', type: 'Plyometric' },
     { name: 'Burpee', type: 'HIIT' },
-    { name: 'Mountain Climber', type: 'HIIT' },
-    { name: 'Sprint', type: 'HIIT' }
+    { name: 'Escalador', type: 'HIIT' },
+    { name: 'Tiro de corrida', type: 'HIIT' }
   ],
   flexibility: [
-    { name: 'Hamstring Stretch', type: 'Legs' },
-    { name: 'Quad Stretch', type: 'Legs' },
-    { name: 'Hip Flexor Stretch', type: 'Hips' },
-    { name: 'Calf Stretch', type: 'Calves' },
-    { name: 'Shoulder Stretch', type: 'Shoulders' },
-    { name: 'Tricep Stretch', type: 'Arms' },
-    { name: 'Chest Stretch', type: 'Chest' },
-    { name: 'Cat-Cow', type: 'Back' },
-    { name: 'Child\'s Pose', type: 'Back' },
-    { name: 'Downward Dog', type: 'Full Body' },
-    { name: 'Cobra Stretch', type: 'Back' },
-    { name: 'Pigeon Pose', type: 'Hips' },
-    { name: 'Butterfly Stretch', type: 'Hips' },
-    { name: 'Seated Forward Fold', type: 'Hamstrings' },
-    { name: 'Thoracic Rotation', type: 'Upper Back' },
-    { name: 'Neck Stretch', type: 'Neck' }
+    { name: 'Alongamento dos posteriores da coxa', type: 'Legs' },
+    { name: 'Alongamento de quadríceps', type: 'Legs' },
+    { name: 'Alongamento dos flexores do quadril', type: 'Hips' },
+    { name: 'Alongamento de panturrilha', type: 'Calves' },
+    { name: 'Alongamento de ombros', type: 'Shoulders' },
+    { name: 'Alongamento de tríceps', type: 'Arms' },
+    { name: 'Alongamento peitoral', type: 'Chest' },
+    { name: 'Gato-vaca', type: 'Back' },
+    { name: 'Postura da criança', type: 'Back' },
+    { name: 'Cachorro olhando para baixo', type: 'Full Body' },
+    { name: 'Postura da cobra', type: 'Back' },
+    { name: 'Postura do pombo', type: 'Hips' },
+    { name: 'Alongamento borboleta', type: 'Hips' },
+    { name: 'Flexão sentada à frente', type: 'Hamstrings' },
+    { name: 'Rotação torácica', type: 'Upper Back' },
+    { name: 'Alongamento de pescoço', type: 'Neck' }
   ]
 }
 
 const filteredCommonExercises = computed(() => {
   return commonExercises[newExercise.value.type] || []
 })
+
+const exerciseTypeLabels = {
+  strength: 'Força',
+  cardio: 'Cardio',
+  flexibility: 'Flexibilidade'
+}
+
+const routineTypeLabels = {
+  weightlifting: 'Musculação',
+  aerobic: 'Aeróbico',
+  flexibility: 'Flexibilidade',
+  combination: 'Combinado'
+}
+
+const commonCategoryLabels = {
+  Legs: 'Pernas',
+  Chest: 'Peitoral',
+  Back: 'Costas',
+  Shoulders: 'Ombros',
+  Hamstrings: 'Posteriores da coxa',
+  Quads: 'Quadríceps',
+  Calves: 'Panturrilhas',
+  Biceps: 'Bíceps',
+  Triceps: 'Tríceps',
+  'Rear Delts': 'Deltoides posteriores',
+  Traps: 'Trapézio',
+  Core: 'Abdômen',
+  Glutes: 'Glúteos',
+  Treadmill: 'Esteira',
+  Bike: 'Bicicleta',
+  Machine: 'Aparelho',
+  Equipment: 'Equipamento',
+  Pool: 'Piscina',
+  Outdoor: 'Ao ar livre',
+  Plyometric: 'Pliometria',
+  HIIT: 'HIIT',
+  Hips: 'Quadril',
+  Arms: 'Braços',
+  'Full Body': 'Corpo todo',
+  'Upper Back': 'Parte superior das costas',
+  Neck: 'Pescoço'
+}
+
+const getExerciseTypeLabel = (type) => exerciseTypeLabels[type] || type
+const getRoutineTypeLabel = (type) => routineTypeLabels[type] || type
+const getCommonCategoryLabel = (category) => commonCategoryLabels[category] || category
 
 const selectCommonExercise = (exercise) => {
   newExercise.value.name = exercise.name
@@ -143,7 +190,7 @@ const loadRoutine = async () => {
       extractExerciseHistory()
     }
   } catch (error) {
-    console.error('Failed to load routine:', error)
+    console.error('Não foi possível carregar a rotina:', error)
   } finally {
     loading.value = false
   }
@@ -170,7 +217,7 @@ const loadProfile = async () => {
       profile.value.weightUnit = data.weightUnit || 'lb'
     }
   } catch (error) {
-    console.error('Failed to load profile:', error)
+    console.error('Não foi possível carregar o perfil:', error)
   }
 }
 
@@ -183,7 +230,7 @@ const loadArchivedWorkouts = async () => {
       archivedWorkouts.value = await response.json()
     }
   } catch (error) {
-    console.error('Failed to load archived workouts:', error)
+    console.error('Não foi possível carregar os treinos arquivados:', error)
   }
 }
 
@@ -205,7 +252,7 @@ const startWorkout = async () => {
       'Authorization': `Bearer ${authStore.token}`
     },
     body: JSON.stringify({
-      name: `${routine.value.name} - ${new Date().toLocaleDateString()}`
+      name: `${routine.value.name} - ${new Date().toLocaleDateString('pt-BR')}`
     })
   })
 
@@ -300,7 +347,7 @@ const toDatetimeLocal = (date) => {
 }
 
 const formatCompletionDate = (value) => {
-  return new Date(value).toLocaleString(undefined, {
+  return new Date(value).toLocaleString('pt-BR', {
     month: 'short',
     day: 'numeric',
     year: 'numeric',
@@ -550,8 +597,8 @@ const toggleArchivedView = async () => {
 }
 
 const openSaveTemplateModal = (workout) => {
-  saveTemplateData.value.name = `${workout.name} Template`
-  saveTemplateData.value.description = `Created from ${workout.name}`
+  saveTemplateData.value.name = `${workout.name} - Modelo`
+  saveTemplateData.value.description = `Criado a partir de ${workout.name}`
   saveTemplateData.value.isPublic = false
   saveTemplateData.value.workoutId = workout.id
   showSaveTemplateModal.value = true
@@ -598,12 +645,12 @@ const closeSaveTemplateModal = () => {
           class="text-blue-600 hover:underline mb-2"
           @click="router.push('/routines')"
         >
-          ← Back to Routines
+          ← Voltar às rotinas
         </button>
         <h1 class="text-2xl font-bold">
-          {{ routine?.name || 'Workout' }}
+          {{ translatePrebuiltText(routine?.name || 'Treino') }}
         </h1>
-        <span class="text-sm text-gray-500 capitalize">{{ routine?.type }}</span>
+        <span class="text-sm text-gray-500">{{ getRoutineTypeLabel(routine?.type) }}</span>
       </div>
       <div class="flex gap-2">
         <button
@@ -611,14 +658,14 @@ const closeSaveTemplateModal = () => {
           class="btn btn-secondary"
           @click="toggleArchivedView"
         >
-          📦 View Archived ({{ routine?.workouts?.filter(w => w.archived)?.length || 0 }})
+          📦 Ver arquivados ({{ routine?.workouts?.filter(w => w.archived)?.length || 0 }})
         </button>
         <button
           v-else
           class="btn btn-secondary"
           @click="toggleArchivedView"
         >
-          ← Back to Active
+          ← Voltar aos ativos
         </button>
       </div>
     </div>
@@ -640,13 +687,13 @@ const closeSaveTemplateModal = () => {
             🏋️
           </div>
           <p class="text-gray-600 dark:text-gray-400 mb-6">
-            Ready to start your workout?
+            Pronto para começar seu treino?
           </p>
           <button
             class="btn btn-primary text-lg px-8 py-3"
             @click="startWorkout"
           >
-            Start New Workout
+            Iniciar novo treino
           </button>
         </div>
 
@@ -658,24 +705,24 @@ const closeSaveTemplateModal = () => {
             <div class="flex items-center justify-between">
               <div>
                 <h2 class="text-lg font-semibold text-green-800 dark:text-green-200">
-                  🔴 Workout in Progress
+                  🔴 Treino em andamento
                 </h2>
                 <p class="text-sm text-green-600 dark:text-green-400">
-                  {{ currentWorkout.name }}
+                  {{ translatePrebuiltText(currentWorkout.name) }}
                 </p>
               </div>
               <button
                 class="btn bg-green-600 hover:bg-green-700 text-white"
                 @click="openCompletionModal"
               >
-                ✅ Complete Workout
+                ✅ Concluir treino
               </button>
             </div>
           </div>
 
           <div class="card">
             <h3 class="font-semibold mb-4">
-              Add Exercise
+              Adicionar exercício
             </h3>
             <div class="flex flex-col gap-3">
               <div class="flex flex-col sm:flex-row gap-2">
@@ -685,7 +732,7 @@ const closeSaveTemplateModal = () => {
                       v-model="newExercise.name"
                       type="text"
                       class="input w-full"
-                      placeholder="Select or type an exercise..."
+                      placeholder="Selecione ou digite um exercício..."
                       @keyup.enter="addExercise"
                       @focus="showExerciseDropdown = true"
                       @blur="handleBlur"
@@ -693,7 +740,7 @@ const closeSaveTemplateModal = () => {
                     <button
                       type="button"
                       class="btn btn-secondary px-3"
-                      title="Show common exercises"
+                      title="Exibir exercícios comuns"
                       @click="toggleExerciseDropdown"
                     >
                       ▼
@@ -709,12 +756,12 @@ const closeSaveTemplateModal = () => {
                         v-model="newExercise.name"
                         type="text"
                         class="input w-full text-sm"
-                        placeholder="Or type custom exercise name..."
+                        placeholder="Ou digite o nome de outro exercício..."
                         @focus="$event.target.select()"
                       >
                     </div>
                     <div class="text-xs text-gray-500 px-3 py-2 border-b border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-700/50">
-                      Common {{ newExercise.type }} exercises
+                      Exercícios comuns de {{ getExerciseTypeLabel(newExercise.type).toLowerCase() }}
                     </div>
                     <div
                       v-for="exercise in filteredCommonExercises"
@@ -722,14 +769,14 @@ const closeSaveTemplateModal = () => {
                       class="px-3 py-2 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer flex items-center justify-between"
                       @mousedown.prevent="selectCommonExercise(exercise)"
                     >
-                      <span>{{ exercise.name }}</span>
-                      <span class="text-xs text-gray-400">{{ exercise.muscle || exercise.type }}</span>
+                      <span>{{ translatePrebuiltText(exercise.name) }}</span>
+                      <span class="text-xs text-gray-400">{{ getCommonCategoryLabel(exercise.muscle || exercise.type) }}</span>
                     </div>
                     <div
                       v-if="filteredCommonExercises.length === 0"
                       class="px-3 py-4 text-sm text-gray-500 text-center"
                     >
-                      No common exercises for this type
+                      Nenhum exercício comum deste tipo
                     </div>
                   </div>
                 </div>
@@ -741,13 +788,13 @@ const closeSaveTemplateModal = () => {
                     class="input"
                   >
                     <option value="strength">
-                      Strength
+                      Força
                     </option>
                     <option value="cardio">
                       Cardio
                     </option>
                     <option value="flexibility">
-                      Flexibility
+                      Flexibilidade
                     </option>
                   </select>
                 </div>
@@ -756,7 +803,7 @@ const closeSaveTemplateModal = () => {
                   :disabled="!newExercise.name.trim()"
                   @click="addExercise"
                 >
-                  Add Exercise
+                  Adicionar exercício
                 </button>
               </div>
             </div>
@@ -767,16 +814,16 @@ const closeSaveTemplateModal = () => {
             :key="exercise.id"
             class="card"
             role="region"
-            :aria-label="`Exercise: ${exercise.name}`"
+            :aria-label="`Exercício: ${exercise.name}`"
           >
             <div class="flex items-center justify-between mb-4">
               <h3 class="font-semibold">
-                {{ exercise.name }}
+                {{ translatePrebuiltText(exercise.name) }}
               </h3>
               <span
                 class="text-xs text-gray-500 uppercase"
-                aria-label="Exercise type"
-              >{{ exercise.type }}</span>
+                aria-label="Tipo de exercício"
+              >{{ getExerciseTypeLabel(exercise.type) }}</span>
             </div>
 
             <div
@@ -787,10 +834,10 @@ const closeSaveTemplateModal = () => {
                 class="grid grid-cols-4 gap-2 text-sm font-medium text-gray-500 mb-2"
                 role="row"
               >
-                <span>Set <HelpIcon text="One completion of an exercise movement" /></span>
-                <span>Reps <HelpIcon text="Number of times you perform the movement in each set" /></span>
-                <span>Weight <HelpIcon text="Amount of resistance used (lb or kg)" /></span>
-                <span>RPE <HelpIcon text="Rate of Perceived Exertion (1-10 scale, how hard it felt)" /></span>
+                <span>Série <HelpIcon text="Uma execução completa de um exercício" /></span>
+                <span>Repetições <HelpIcon text="Quantidade de vezes que você executa o movimento em cada série" /></span>
+                <span>Peso <HelpIcon text="Carga utilizada (lb ou kg)" /></span>
+                <span>RPE <HelpIcon text="Percepção subjetiva de esforço (escala de 1 a 10)" /></span>
               </div>
               
               <div
@@ -798,7 +845,7 @@ const closeSaveTemplateModal = () => {
                 :key="set.id"
                 class="grid grid-cols-5 gap-2 items-center p-2 rounded-lg cursor-pointer focus:ring-2 focus:ring-blue-500 focus:outline-none"
                 :class="set.completed ? 'bg-green-50 dark:bg-green-900/20' : 'bg-gray-50 dark:bg-gray-700/50'"
-                :aria-label="`Set ${idx + 1}: ${set.reps} reps, ${set.weight} ${profile.weightUnit}, RPE ${set.rpe || 'not set'}${set.completed ? ', completed' : ''}`"
+                :aria-label="`Série ${idx + 1}: ${set.reps} repetições, ${set.weight} ${profile.weightUnit}, RPE ${set.rpe || 'não informado'}${set.completed ? ', concluída' : ''}`"
                 role="row"
                 tabindex="0"
                 @click="toggleSetComplete(set)"
@@ -811,34 +858,34 @@ const closeSaveTemplateModal = () => {
                 <span>{{ set.rpe || '-' }}</span>
                 <span
                   class="text-center"
-                  :aria-label="set.completed ? 'Completed' : 'Not completed'"
+                  :aria-label="set.completed ? 'Concluída' : 'Não concluída'"
                 >{{ set.completed ? '✓' : '' }}</span>
               </div>
 
               <div
                 class="flex flex-col sm:flex-row gap-2 mt-4"
                 role="group"
-                :aria-label="`Add set for ${exercise.name}`"
+                :aria-label="`Adicionar série para ${exercise.name}`"
               >
                 <div>
                   <label
                     :for="`reps-${exercise.id}`"
                     class="sr-only"
-                  >Reps</label>
+                  >Repetições</label>
                   <input
                     :id="`reps-${exercise.id}`"
                     v-model="getNewSet(exercise.id).reps"
                     type="number"
                     class="input w-full sm:w-28"
-                    placeholder="# reps"
-                    aria-label="Reps"
+                    placeholder="Nº de repetições"
+                    aria-label="Repetições"
                   >
                 </div>
                 <div>
                   <label
                     :for="`weight-${exercise.id}`"
                     class="sr-only"
-                  >Weight</label>
+                  >Peso</label>
                   <input
                     :id="`weight-${exercise.id}`"
                     v-model="getNewSet(exercise.id).weight"
@@ -846,7 +893,7 @@ const closeSaveTemplateModal = () => {
                     step="0.5"
                     class="input w-full sm:w-32"
                     :placeholder="profile.weightUnit || 'lb'"
-                    aria-label="Weight"
+                    aria-label="Peso"
                   >
                 </div>
                 <div>
@@ -861,8 +908,8 @@ const closeSaveTemplateModal = () => {
                     min="1"
                     max="10"
                     class="input w-full sm:w-20"
-                    placeholder="RPE 1-10"
-                    aria-label="Rate of perceived exertion"
+                    placeholder="RPE de 1 a 10"
+                    aria-label="Percepção subjetiva de esforço"
                   >
                 </div>
                 <button
@@ -884,10 +931,10 @@ const closeSaveTemplateModal = () => {
                 class="space-y-3"
               >
                 <div class="flex items-center justify-between text-sm font-medium text-gray-500 border-b pb-2">
-                  <span>Cardio Log</span>
+                  <span>Registro de cardio</span>
                   <div class="flex gap-4">
                     <span v-if="calculateAverageSpeed(exercise.aerobicLogs)">
-                      Avg: {{ calculateAverageSpeed(exercise.aerobicLogs) }} mph
+                      Média: {{ calculateAverageSpeed(exercise.aerobicLogs) }} mph
                     </span>
                     <span>
                       Total: {{ calculateTotalStats(exercise.aerobicLogs).totalDistance.toFixed(2) }} {{ exercise.aerobicLogs[0]?.distanceUnit || 'mi' }}
@@ -897,9 +944,9 @@ const closeSaveTemplateModal = () => {
                 </div>
 
                 <div class="grid grid-cols-4 gap-2 text-sm font-medium text-gray-500 mb-2">
-                  <span>Distance</span>
-                  <span>Time (min)</span>
-                  <span>Heart Rate</span>
+                  <span>Distância</span>
+                  <span>Tempo (min)</span>
+                  <span>Frequência cardíaca</span>
                   <span />
                 </div>
 
@@ -923,34 +970,34 @@ const closeSaveTemplateModal = () => {
 
               <div class="border-t pt-4">
                 <div class="text-sm font-medium text-gray-500 mb-2">
-                  Add Entry
+                  Adicionar registro
                 </div>
                 <div class="flex flex-col sm:flex-row gap-2 items-end">
                   <div class="flex-1">
                     <label
                       :for="`distance-${exercise.id}`"
                       class="sr-only"
-                    >Distance</label>
+                    >Distância</label>
                     <input
                       :id="`distance-${exercise.id}`"
                       v-model="getNewCardioEntry(exercise.id).distance"
                       type="number"
                       step="0.01"
                       class="input w-full"
-                      placeholder="Distance"
-                      aria-label="Distance"
+                      placeholder="Distância"
+                      aria-label="Distância"
                     >
                   </div>
                   <div class="w-24">
                     <label
                       :for="`unit-${exercise.id}`"
                       class="sr-only"
-                    >Unit</label>
+                    >Unidade</label>
                     <select
                       :id="`unit-${exercise.id}`"
                       v-model="getNewCardioEntry(exercise.id).distanceUnit"
                       class="input w-full"
-                      aria-label="Distance unit"
+                      aria-label="Unidade de distância"
                     >
                       <option value="miles">
                         mi
@@ -967,28 +1014,28 @@ const closeSaveTemplateModal = () => {
                     <label
                       :for="`duration-${exercise.id}`"
                       class="sr-only"
-                    >Duration</label>
+                    >Duração</label>
                     <input
                       :id="`duration-${exercise.id}`"
                       v-model="getNewCardioEntry(exercise.id).duration"
                       type="number"
                       class="input w-full"
-                      placeholder="Time (min)"
-                      aria-label="Duration in minutes"
+                      placeholder="Tempo (min)"
+                      aria-label="Duração em minutos"
                     >
                   </div>
                   <div class="w-28">
                     <label
                       :for="`hr-${exercise.id}`"
                       class="sr-only"
-                    >Heart Rate</label>
+                    >Frequência cardíaca</label>
                     <input
                       :id="`hr-${exercise.id}`"
                       v-model="getNewCardioEntry(exercise.id).heartRate"
                       type="number"
                       class="input w-full"
                       placeholder="BPM"
-                      aria-label="Heart rate in BPM"
+                      aria-label="Frequência cardíaca em BPM"
                     >
                   </div>
                   <button
@@ -996,14 +1043,14 @@ const closeSaveTemplateModal = () => {
                     type="button"
                     @click="addCardioEntry(exercise.id)"
                   >
-                    + Entry
+                    + Registro
                   </button>
                 </div>
                 <p
                   v-if="getNewCardioEntry(exercise.id).distance && getNewCardioEntry(exercise.id).duration"
                   class="text-xs text-gray-500 mt-1"
                 >
-                  Pace: {{ (parseFloat(getNewCardioEntry(exercise.id).duration) / parseFloat(getNewCardioEntry(exercise.id).distance)).toFixed(2) }} min/{{ getNewCardioEntry(exercise.id).distanceUnit }}
+                  Ritmo: {{ (parseFloat(getNewCardioEntry(exercise.id).duration) / parseFloat(getNewCardioEntry(exercise.id).distance)).toFixed(2) }} min/{{ getNewCardioEntry(exercise.id).distanceUnit }}
                 </p>
               </div>
 
@@ -1012,21 +1059,21 @@ const closeSaveTemplateModal = () => {
                 class="mt-4"
               >
                 <div class="text-sm font-medium text-gray-500 mb-2">
-                  Flexibility Log
+                  Registro de flexibilidade
                 </div>
                 <div class="flex gap-2">
                   <div class="flex-1">
                     <label
                       :for="`flex-duration-${exercise.id}`"
                       class="sr-only"
-                    >Duration</label>
+                    >Duração</label>
                     <input
                       :id="`flex-duration-${exercise.id}`"
                       v-model="getNewCardioEntry(exercise.id).flexDuration"
                       type="number"
                       class="input w-full"
-                      placeholder="Duration (sec)"
-                      aria-label="Duration in seconds"
+                      placeholder="Duração (s)"
+                      aria-label="Duração em segundos"
                     >
                   </div>
                   <button
@@ -1034,7 +1081,7 @@ const closeSaveTemplateModal = () => {
                     type="button"
                     @click="addFlexibilityLog(exercise.id)"
                   >
-                    Log
+                    Registrar
                   </button>
                 </div>
               </div>
@@ -1047,7 +1094,7 @@ const closeSaveTemplateModal = () => {
           class="card border-yellow-200 dark:border-yellow-800"
         >
           <h3 class="font-semibold mb-4 text-yellow-700 dark:text-yellow-400">
-            ⏸️ Incomplete Workouts
+            ⏸️ Treinos incompletos
           </h3>
           <div class="space-y-2">
             <div
@@ -1056,16 +1103,16 @@ const closeSaveTemplateModal = () => {
               class="flex items-center justify-between p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg"
             >
               <div>
-                <span class="font-medium">{{ workout.name }}</span>
+                <span class="font-medium">{{ translatePrebuiltText(workout.name) }}</span>
                 <span class="ml-2 text-sm text-gray-500">
-                  Started {{ new Date(workout.createdAt).toLocaleDateString() }}
+                  Iniciado em {{ new Date(workout.createdAt).toLocaleDateString('pt-BR') }}
                 </span>
               </div>
               <button
                 class="btn btn-secondary"
                 @click="continueWorkout(workout)"
               >
-                ▶ Continue
+                ▶ Continuar
               </button>
             </div>
           </div>
@@ -1077,13 +1124,13 @@ const closeSaveTemplateModal = () => {
         >
           <div class="flex items-center justify-between mb-4">
             <h3 class="font-semibold">
-              📋 Past Workouts ({{ pastWorkouts.length }})
+              📋 Treinos anteriores ({{ pastWorkouts.length }})
             </h3>
             <button
               class="btn btn-secondary text-sm"
               @click="openArchivePanel"
             >
-              📦 Archive
+              📦 Arquivar
             </button>
           </div>
 
@@ -1093,21 +1140,21 @@ const closeSaveTemplateModal = () => {
           >
             <div class="flex items-center justify-between mb-3">
               <h4 class="font-medium">
-                Select workouts to archive:
+                Selecione os treinos para arquivar:
               </h4>
               <div class="flex gap-2">
                 <button
                   class="text-sm text-blue-600 hover:underline"
                   @click="selectAllPastWorkouts"
                 >
-                  Select All
+                  Selecionar todos
                 </button>
                 <button
                   v-if="selectedWorkouts.length > 0"
                   class="text-sm text-gray-500 hover:underline"
                   @click="clearSelection"
                 >
-                  Clear
+                  Limpar seleção
                 </button>
               </div>
             </div>
@@ -1116,15 +1163,15 @@ const closeSaveTemplateModal = () => {
               v-if="selectedWorkouts.length > 0"
               class="mb-3 p-2 bg-blue-50 dark:bg-blue-900/20 rounded text-sm"
             >
-              {{ selectedWorkouts.length }} workout(s) selected
+              {{ selectedWorkouts.length }} treino(s) selecionado(s)
             </div>
 
             <div class="text-sm text-gray-600 dark:text-gray-400 mb-3">
-              Or filter by:
+              Ou filtrar por:
             </div>
             <div class="grid grid-cols-3 gap-3 mb-3">
               <div>
-                <label class="text-sm">Start Date</label>
+                <label class="text-sm">Data inicial</label>
                 <input
                   v-model="archiveFilter.startDate"
                   type="date"
@@ -1132,7 +1179,7 @@ const closeSaveTemplateModal = () => {
                 >
               </div>
               <div>
-                <label class="text-sm">End Date</label>
+                <label class="text-sm">Data final</label>
                 <input
                   v-model="archiveFilter.endDate"
                   type="date"
@@ -1140,12 +1187,12 @@ const closeSaveTemplateModal = () => {
                 >
               </div>
               <div>
-                <label class="text-sm">Name contains</label>
+                <label class="text-sm">Nome contém</label>
                 <input
                   v-model="archiveFilter.namePattern"
                   type="text"
                   class="input w-full text-sm"
-                  placeholder="e.g., 'Push'"
+                  placeholder="Ex.: 'Empurrar'"
                 >
               </div>
             </div>
@@ -1155,13 +1202,13 @@ const closeSaveTemplateModal = () => {
                 class="btn btn-primary"
                 @click="batchArchive"
               >
-                Archive Selected/Filtered
+                Arquivar selecionados/filtrados
               </button>
               <button
                 class="btn btn-secondary"
                 @click="closeArchivePanel"
               >
-                Cancel
+                Cancelar
               </button>
             </div>
           </div>
@@ -1181,12 +1228,12 @@ const closeSaveTemplateModal = () => {
                   @change="toggleWorkoutSelection(workout.id)"
                 >
                 <div>
-                  <span class="font-medium">{{ workout.name }}</span>
+                  <span class="font-medium">{{ translatePrebuiltText(workout.name) }}</span>
                   <span class="ml-2 text-sm text-gray-500">
                     ✓ {{ formatCompletionDate(workout.completedAt) }}
                   </span>
                   <span class="ml-2 text-xs text-gray-400">
-                    {{ workout.exercises?.length || 0 }} exercises
+                    {{ workout.exercises?.length || 0 }} exercícios
                   </span>
                 </div>
               </div>
@@ -1195,25 +1242,25 @@ const closeSaveTemplateModal = () => {
                   class="btn btn-secondary text-sm"
                   @click="continueWorkout(workout)"
                 >
-                  📋 Continue
+                  📋 Continuar
                 </button>
                 <button
                   class="btn btn-secondary text-sm"
-                  title="Edit completion time"
+                  title="Editar horário de conclusão"
                   @click="openEditCompletionModal(workout)"
                 >
                   🕐
                 </button>
                 <button
                   class="btn btn-secondary text-sm"
-                  title="Save as Template"
+                  title="Salvar como modelo"
                   @click="openSaveTemplateModal(workout)"
                 >
-                  📄 Template
+                  📄 Modelo
                 </button>
                 <button
                   class="text-gray-400 hover:text-red-500"
-                  title="Archive"
+                  title="Arquivar"
                   @click="archiveWorkout(workout.id)"
                 >
                   📦
@@ -1228,7 +1275,7 @@ const closeSaveTemplateModal = () => {
         <div class="card">
           <div class="flex items-center justify-between mb-4">
             <h3 class="font-semibold">
-              📦 Archived Workouts ({{ archivedWorkouts.length }})
+              📦 Treinos arquivados ({{ archivedWorkouts.length }})
             </h3>
           </div>
 
@@ -1236,7 +1283,7 @@ const closeSaveTemplateModal = () => {
             v-if="archivedWorkouts.length === 0"
             class="text-center py-8 text-gray-500"
           >
-            No archived workouts
+            Nenhum treino arquivado
           </div>
 
           <div
@@ -1249,16 +1296,16 @@ const closeSaveTemplateModal = () => {
               class="flex items-center justify-between p-3 bg-gray-100 dark:bg-gray-800 rounded-lg"
             >
               <div>
-                <span class="font-medium">{{ workout.name }}</span>
+                <span class="font-medium">{{ translatePrebuiltText(workout.name) }}</span>
                 <span class="ml-2 text-sm text-gray-500">
-                  {{ new Date(workout.completedAt || workout.createdAt).toLocaleDateString() }}
+                  {{ new Date(workout.completedAt || workout.createdAt).toLocaleDateString('pt-BR') }}
                 </span>
               </div>
               <button
                 class="btn btn-secondary text-sm"
                 @click="restoreWorkout(workout.id)"
               >
-                ↩️ Restore
+                ↩️ Restaurar
               </button>
             </div>
           </div>
@@ -1273,27 +1320,27 @@ const closeSaveTemplateModal = () => {
     >
       <div class="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-md shadow-xl">
         <h3 class="text-lg font-semibold mb-4">
-          Save as Template
+          Salvar como modelo
         </h3>
         
         <div class="space-y-4">
           <div>
-            <label class="block text-sm font-medium mb-1">Template Name</label>
+            <label class="block text-sm font-medium mb-1">Nome do modelo</label>
             <input
               v-model="saveTemplateData.name"
               type="text"
               class="input w-full"
-              placeholder="My Workout Template"
+              placeholder="Meu modelo de treino"
             >
           </div>
           
           <div>
-            <label class="block text-sm font-medium mb-1">Description</label>
+            <label class="block text-sm font-medium mb-1">Descrição</label>
             <textarea
               v-model="saveTemplateData.description"
               class="input w-full"
               rows="3"
-              placeholder="Describe this template..."
+              placeholder="Descreva este modelo..."
             />
           </div>
           
@@ -1307,7 +1354,7 @@ const closeSaveTemplateModal = () => {
             <label
               for="isPublicTemplate"
               class="text-sm"
-            >Make this template public</label>
+            >Tornar este modelo público</label>
           </div>
         </div>
         
@@ -1317,13 +1364,13 @@ const closeSaveTemplateModal = () => {
             :disabled="savingTemplate || !saveTemplateData.name.trim()"
             @click="saveAsTemplate"
           >
-            {{ savingTemplate ? 'Saving...' : 'Save Template' }}
+            {{ savingTemplate ? 'Salvando...' : 'Salvar modelo' }}
           </button>
           <button
             class="btn btn-secondary"
             @click="closeSaveTemplateModal"
           >
-            Cancel
+            Cancelar
           </button>
         </div>
       </div>
@@ -1336,13 +1383,13 @@ const closeSaveTemplateModal = () => {
     >
       <div class="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-md shadow-xl">
         <h3 class="text-lg font-semibold mb-2">
-          {{ editingCompletedWorkoutId ? 'Edit Completion Time' : 'Complete Workout' }}
+          {{ editingCompletedWorkoutId ? 'Editar horário de conclusão' : 'Concluir treino' }}
         </h3>
         <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">
-          When did you actually finish this workout? You can log it after the fact.
+          Quando você terminou este treino? Você pode registrar o horário depois.
         </p>
 
-        <label class="block text-sm font-medium mb-1">Completed at</label>
+        <label class="block text-sm font-medium mb-1">Concluído em</label>
         <input
           v-model="completionInput"
           type="datetime-local"
@@ -1355,13 +1402,13 @@ const closeSaveTemplateModal = () => {
             :disabled="savingCompletion || !completionInput"
             @click="confirmCompletion"
           >
-            {{ savingCompletion ? 'Saving...' : (editingCompletedWorkoutId ? 'Save Time' : 'Complete Workout') }}
+            {{ savingCompletion ? 'Salvando...' : (editingCompletedWorkoutId ? 'Salvar horário' : 'Concluir treino') }}
           </button>
           <button
             class="btn btn-secondary"
             @click="closeCompletionModal"
           >
-            Cancel
+            Cancelar
           </button>
         </div>
       </div>

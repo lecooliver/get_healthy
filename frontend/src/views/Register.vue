@@ -21,17 +21,17 @@ const handleSubmit = async () => {
   error.value = ''
   
   if (!form.value.displayName || !form.value.email || !form.value.password) {
-    error.value = 'Please fill in all fields'
+    error.value = 'Preencha todos os campos.'
     return
   }
   
   if (form.value.password.length < 6) {
-    error.value = 'Password must be at least 6 characters'
+    error.value = 'A senha deve ter pelo menos 6 caracteres.'
     return
   }
   
   if (form.value.password !== form.value.confirmPassword) {
-    error.value = 'Passwords do not match'
+    error.value = 'As senhas não coincidem.'
     return
   }
   
@@ -42,7 +42,7 @@ const handleSubmit = async () => {
     const redirect = route.query.redirect || '/dashboard'
     router.push(redirect)
   } catch (err) {
-    error.value = err.message || 'Registration failed'
+    error.value = err.message || 'Não foi possível criar a conta.'
   } finally {
     loading.value = false
   }
@@ -56,7 +56,7 @@ const handleSubmit = async () => {
         Get Healthy
       </h1>
       <p class="text-gray-600 dark:text-gray-400">
-        Create your account
+        Crie sua conta
       </p>
     </div>
     
@@ -73,29 +73,29 @@ const handleSubmit = async () => {
         </div>
         
         <div>
-          <label class="block text-sm font-medium mb-1">Display Name</label>
+          <label class="block text-sm font-medium mb-1">Nome de exibição</label>
           <input
             v-model="form.displayName"
             type="text"
             class="input"
-            placeholder="John Doe"
+            placeholder="Seu nome"
             autocomplete="name"
           >
         </div>
         
         <div>
-          <label class="block text-sm font-medium mb-1">Email</label>
+          <label class="block text-sm font-medium mb-1">E-mail</label>
           <input
             v-model="form.email"
             type="email"
             class="input"
-            placeholder="you@example.com"
+            placeholder="voce@exemplo.com"
             autocomplete="email"
           >
         </div>
         
         <div>
-          <label class="block text-sm font-medium mb-1">Password</label>
+          <label class="block text-sm font-medium mb-1">Senha</label>
           <input
             v-model="form.password"
             type="password"
@@ -106,7 +106,7 @@ const handleSubmit = async () => {
         </div>
         
         <div>
-          <label class="block text-sm font-medium mb-1">Confirm Password</label>
+          <label class="block text-sm font-medium mb-1">Confirme a senha</label>
           <input
             v-model="form.confirmPassword"
             type="password"
@@ -121,17 +121,17 @@ const handleSubmit = async () => {
           class="btn btn-primary w-full"
           :disabled="loading"
         >
-          {{ loading ? 'Creating account...' : 'Create Account' }}
+          {{ loading ? 'Criando conta...' : 'Criar conta' }}
         </button>
       </form>
       
       <p class="text-center text-sm text-gray-600 dark:text-gray-400 mt-4">
-        Already have an account?
+        Já tem uma conta?
         <RouterLink
           to="/login"
           class="text-blue-600 dark:text-blue-400 hover:underline"
         >
-          Sign in
+          Entrar
         </RouterLink>
       </p>
     </div>
