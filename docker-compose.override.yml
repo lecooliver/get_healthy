@@ -1,0 +1,26 @@
+# Development override - mounts source code for live reloading
+# Usage: docker-compose up -d
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    environment:
+      NODE_ENV: development
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./backend/src:/app/src
+      - ./backend/uploads:/app/uploads
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    environment:
+      VITE_API_TARGET: http://backend:3000
+    ports:
+      - "5174:5173"
+    volumes:
+      - ./frontend/src:/app/src

@@ -1,0 +1,301 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "debian-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id              String    @id @default(uuid())
+  email           String    @unique
+  displayName     String
+  passwordHash    String?   @map("password_hash")
+  role            String    @default("user")
+  provider        String    @default("local") @map("provider")
+  providerId      String?   @map("provider_id")
+  emailVerified   Boolean   @default(false) @map("email_verified")
+  verificationToken String? @map("verification_token")
+  resetToken      String?   @map("reset_token")
+  resetTokenExpiry DateTime? @map("reset_token_expiry")
+  avatarUrl       String?   @map("avatar_url")
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+
+  profile            UserProfile?
+  measurements       BodyMeasurement[]
+  routines           Routine[]
+  scheduledWorkouts  ScheduledWorkout[]
+  templates          Template[]        @relation("UserTemplates")
+  exerciseLimits     ExerciseLimit[]
+  photos             Photo[]
+
+  @@unique([provider, providerId])
+  @@map("users")
+}
+
+model UserProfile {
+  id          String  @id @default(uuid())
+  userId      String  @unique @map("user_id")
+  displayName String?
+  avatarUrl   String? @map("avatar_url")
+  height      Float?
+  age         Int?
+  weight      Float?
+  weightUnit  String  @default("lb") @map("weight_unit")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_profiles")
+}
+
+model BodyMeasurement {
+  id        String   @id @default(uuid())
+  userId    String   @map("user_id")
+  date      DateTime @db.Date
+  weight    Float?
+  waist     Float?
+  hips      Float?
+  chest     Float?
+  thighL    Float?   @map("thigh_l")
+  thighR    Float?   @map("thigh_r")
+  bicepL    Float?   @map("bicep_l")
+  bicepR    Float?   @map("bicep_r")
+  shoulderSpan Float? @map("shoulder_span")
+  calfL     Float?   @map("calf_l")
+  calfR     Float?   @map("calf_r")
+  backSpan  Float?   @map("back_span")
+  neck      Float?
+  bodyFatPercentage Float? @map("body_fat_percentage")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([userId, date])
+  @@map("body_measurements")
+}
+
+model Routine {
+  id        String   @id @default(uuid())
+  userId    String   @map("user_id")
+  name      String
+  type      String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  workouts   Workout[]
+  schedules  ScheduledWorkout[]
+
+  @@index([userId])
+  @@map("routines")
+}
+
+model Workout {
+  id           String    @id @default(uuid())
+  routineId    String    @map("routine_id")
+  name         String
+  scheduledDate DateTime? @map("scheduled_date") @db.Date
+  completedAt  DateTime? @map("completed_at")
+  archived     Boolean   @default(false)
+  order        Int       @default(1)
+  createdAt    DateTime  @default(now()) @map("created_at")
+
+  routine  Routine    @relation(fields: [routineId], references: [id], onDelete: Cascade)
+  exercises Exercise[]
+
+  @@index([routineId])
+  @@index([routineId, archived])
+  @@map("workouts")
+}
+
+model Exercise {
+  id        String   @id @default(uuid())
+  workoutId String   @map("workout_id")
+  name      String
+  type      String
+  order     Int      @default(1)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  workout        Workout        @relation(fields: [workoutId], references: [id], onDelete: Cascade)
+  sets           ExerciseSet[]
+  aerobicLog     AerobicLog[]
+  flexibilityLog FlexibilityLog[]
+
+  @@index([workoutId])
+  @@map("exercises")
+}
+
+model ExerciseSet {
+  id         String   @id @default(uuid())
+  exerciseId String   @map("exercise_id")
+  setNumber  Int      @map("set_number")
+  reps       Int      @default(0)
+  weight     Float    @default(0)
+  rpe        Int?
+  completed  Boolean  @default(false)
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  exercise Exercise @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
+
+  @@index([exerciseId])
+  @@map("exercise_sets")
+}
+
+model AerobicLog {
+  id                   String   @id @default(uuid())
+  exerciseId           String   @map("exercise_id")
+  durationMinutes      Int      @map("duration_minutes")
+  distance             Float?
+  distanceUnit         String   @default("miles") @map("distance_unit")
+  heartRate            Int?
+  calories             Int?
+  bloodPressureSystolic Int?    @map("blood_pressure_systolic")
+  bloodPressureDiastolic Int?  @map("blood_pressure_diastolic")
+  spo2                 Int?
+  createdAt            DateTime @default(now()) @map("created_at")
+
+  exercise Exercise @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
+
+  @@index([exerciseId])
+  @@map("aerobic_logs")
+}
+
+model FlexibilityLog {
+  id              String   @id @default(uuid())
+  exerciseId      String   @map("exercise_id")
+  durationMinutes Int?     @map("duration_minutes")
+  notes           String?
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  exercise Exercise @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
+
+  @@index([exerciseId])
+  @@map("flexibility_logs")
+}
+
+model Template {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  type        String
+  goals       String[] @default([])
+  difficulty  String   @default("beginner")
+  equipment   String[] @default([])
+  isPublic    Boolean  @default(false) @map("is_public")
+  createdBy   String   @map("created_by")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  creator User           @relation("UserTemplates", fields: [createdBy], references: [id])
+  workouts TemplateWorkout[]
+
+  @@index([createdBy])
+  @@map("templates")
+}
+
+model TemplateWorkout {
+  id         String  @id @default(uuid())
+  templateId String  @map("template_id")
+  name       String
+  order      Int     @default(1)
+
+  template      Template       @relation(fields: [templateId], references: [id], onDelete: Cascade)
+  exerciseGroups TemplateExerciseGroup[]
+
+  @@index([templateId])
+  @@map("template_workouts")
+}
+
+model TemplateExerciseGroup {
+  id              String  @id @default(uuid())
+  templateWorkoutId String @map("template_workout_id")
+  name            String
+  order           Int     @default(1)
+
+  templateWorkout TemplateWorkout    @relation(fields: [templateWorkoutId], references: [id], onDelete: Cascade)
+  exercises       TemplateExercise[]
+
+  @@index([templateWorkoutId])
+  @@map("template_exercise_groups")
+}
+
+model TemplateExercise {
+  id              String  @id @default(uuid())
+  templateExerciseGroupId String @map("template_exercise_group_id")
+  name            String
+  type            String
+  defaultSets     Int?    @map("default_sets")
+  defaultReps     Int?    @map("default_reps")
+  restSeconds     Int?    @map("rest_seconds")
+  durationMinutes Int?    @map("duration_minutes")
+  notes           String?
+  order           Int     @default(1)
+
+  exerciseGroup TemplateExerciseGroup @relation(fields: [templateExerciseGroupId], references: [id], onDelete: Cascade)
+
+  @@index([templateExerciseGroupId])
+  @@map("template_exercises")
+}
+
+model ScheduledWorkout {
+  id             String   @id @default(uuid())
+  userId         String   @map("user_id")
+  routineId      String   @map("routine_id")
+  scheduledDate  DateTime @map("scheduled_date") @db.Date
+  cadenceType    String   @default("once") @map("cadence_type")
+  cadenceValue   Int?     @map("cadence_value")
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  routine Routine @relation(fields: [routineId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("scheduled_workouts")
+}
+
+model ExerciseLimit {
+  id            String   @id @default(uuid())
+  userId        String   @map("user_id")
+  exerciseName  String   @map("exercise_name")
+  limitType     String   @map("limit_type")
+  value         Float?
+  unit          String?
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, exerciseName, limitType])
+  @@index([userId])
+  @@map("exercise_limits")
+}
+
+model AppSetting {
+  id        String   @id @default(uuid())
+  key       String   @unique
+  value     String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("app_settings")
+}
+
+model Photo {
+  id          String   @id @default(uuid())
+  userId      String   @map("user_id")
+  filename    String
+  originalName String  @map("original_name")
+  category    String?
+  notes       String?
+  takenAt     DateTime? @map("taken_at")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([userId, category])
+  @@map("photos")
+}

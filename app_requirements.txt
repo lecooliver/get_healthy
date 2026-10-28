@@ -1,0 +1,55 @@
+Goal:
+Provide a clean, simple, open source application to track fitness activities and become a healthier person overal.
+
+What's needed:
+A multi-user application that runs in a client / server setup via Web Browser and Mobile Web browser connection. 
+
+- A user should need to login, 
+    - An administrative user (server master) should have the option to setup an SSO / OIDC / OAuth2 system to handle authentication and user sync.
+- The system should provide clean navigation.
+- The system should have unit and API tests for all areas.
+- The system should use Tailwind CSS from https://tailwindcss.com as the CSS system for the application.
+- The system should allow the user to select Light or Dark modes, and preferably deafult the mode based on the device they are accessing the site from.
+- Each User should be able to:
+    - Delete his / her data at any time, but should be warned that once deleted, it cannot be recovered.
+    - Enter his / her photo (headshot) for the profile
+        - his / her height
+        - his / her age
+        - his / her current weight with the option to update and track progress on body weight over time.
+        - Additonal personal measurements might be sizes of body parts in cluding:
+            - Waist
+            - Hips
+            - Chest
+            - Each Thigh Circumference
+            - Each Bicep Circumference
+            - Shoulder Span
+            - Each Calf
+            - Back Span
+            - Neck Circumference
+            - Body Fat Percentage
+            - All of these measurements should be able to be updated, and tracked over time.
+    - Create workout Routines
+        - Routines would include different types of workouts based on:
+            - Weight Lifting
+            - Aerobic
+            - Flexibility
+            - Combination (A combination of any of the previous options)
+    - Within a routine, create one to many workouts.
+        - Each workout should able to include one to many exercises.
+            - Exercises should be able to be recorded based on the Routine type selected.
+                - As an example an aerobic workout might be a run for X minutes, or Y miles.
+                - As a second example, a wegight lifting workout might include multiple exercises each having multiple sets, which each has multiple repetitions. The user would want to log Sets and Reps done for each exercise. And potentially log whether those sets and repetitions led to muscle failure.
+                - As a third example, a flexibility workout may involve multiple Yoga or Pilates movements for certain amounts of time each.
+                - A combination could involve all of these, 2 of these, etc.
+    - Entry of exercise data should be quick, minmal, and simple, as it's being done during a workout often times.
+    - An aerobic workout would be more valuable with calculated calorie burn, options to enter heart-rate, blood oxidation levels, and blood pressure at one or many stages of the workout.
+    - Research the different workout types and methods and suggest ways in which to enhance the workout tracking, and consider how to add this as optional data gathering.
+- Reporting
+    - The system should include reports on exercises (again do research online to determine some good reports and charts to display for the user in his / her dashboard on his / her progress).
+    - The system should include reports against time / date
+        - Time of day when exercises are done as a view option is beneficial to compare performance based on time of day.
+- Dashboard
+    - Summarized reporting and charts, as well as some inspriational messages to continue working toward goals would be great as well.
+- Scheduling workouts on specific days, or a specific cadence (e.g. every other day, or every 3rd day, etc.) would help keep a person on track.
+- Allowing a person to set upper and lower limits on exercises in which the system could suggest increasing or decreasing activity, or even taking a little longer break for recovery would be ideal.
+- Allow the person to connect their server to an AI agent to help perform some of the suggestions, either online AI, or local AI such as with Ollama.
