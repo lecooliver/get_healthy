@@ -2,16 +2,18 @@
 
 ## Docker Images (Updated)
 
-Images pushed to Docker Hub:
+Images published to GitHub Container Registry:
 
 ```bash
-docker pull bmcgonag/get_healthy_backend:latest
-docker pull bmcgonag/get_healthy_frontend:latest
+docker pull ghcr.io/lecooliver/get_healthy_backend:latest
+docker pull ghcr.io/lecooliver/get_healthy_frontend:latest
 ```
 
 **Image Details:**
-- `bmcgonag/get_healthy_backend:latest` (155MB)
-- `bmcgonag/get_healthy_frontend:latest` (26.2MB)
+- `ghcr.io/lecooliver/get_healthy_backend:latest`
+- `ghcr.io/lecooliver/get_healthy_frontend:latest`
+
+The GitHub Actions workflow publishes `linux/amd64` and `linux/arm64` images on pushes to the default branch and version tags. Make both packages public in the repository's GitHub Packages settings for unauthenticated production pulls; otherwise, configure Docker authentication on the host.
 
 ## Volume Permissions for Photo Uploads
 
@@ -30,7 +32,7 @@ sudo chown -R 999:999 /path/to/get_healthy/backend/uploads
 ```yaml
 services:
   backend:
-    image: bmcgonag/get_healthy_backend:latest
+    image: ghcr.io/lecooliver/get_healthy_backend:latest
     volumes:
       - ./backend/uploads:/app/uploads
     environment:
@@ -42,7 +44,7 @@ services:
       - db
 
   frontend:
-    image: bmcgonag/get_healthy_frontend:latest
+    image: ghcr.io/lecooliver/get_healthy_frontend:latest
     ports:
       - "80:80"
     environment:
@@ -160,15 +162,15 @@ curl -X POST https://your-domain.com/api/photos \
 1. ✅ Fixed photo upload permissions documentation
 2. ✅ Rebuilt backend image with proper `/app/uploads` permissions
 3. ✅ Rebuilt frontend image
-4. ✅ Pushed both images to `bmcgonag/get_healthy_backend:latest` and `bmcgonag/get_healthy_frontend:latest`
+4. Images are published to `ghcr.io/lecooliver/get_healthy_backend:latest` and `ghcr.io/lecooliver/get_healthy_frontend:latest`
 5. ✅ Created comprehensive `REVERSE_PROXY.md`
 6. ✅ All 131 tests pass (not 323 as mentioned in spec)
 
 ## Pull Commands for Production
 
 ```bash
-docker pull bmcgonag/get_healthy_backend:latest
-docker pull bmcgonag/get_healthy_frontend:latest
+docker pull ghcr.io/lecooliver/get_healthy_backend:latest
+docker pull ghcr.io/lecooliver/get_healthy_frontend:latest
 ```
 
 Or update your `docker-compose.yml` to use `:latest` tag and run:
